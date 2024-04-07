@@ -41,7 +41,7 @@ let myChart = null; // This variable will hold the chart instance
 
 function plotResults(parameters, initialConditions, timeHorizonYears) {
     const monthsToWait = Array.from({length: timeHorizonYears * 12 - 1}, (_, i) => i + 1);
-    const finalNetWorthForThisCase = monthsToWait.map(month => getFinalNetWorth(parameters, initialConditions, timeHorizonYears, month));
+    const finalNetWorthForThisCase = monthsToWait.map(month => computeFinalNetWorth(parameters, initialConditions, timeHorizonYears, month));
 
     const ctx = document.getElementById('resultsChart').getContext('2d');
     
@@ -81,7 +81,7 @@ function plotResults(parameters, initialConditions, timeHorizonYears) {
     });
 }
 
-function getFinalNetWorth(Parameters, InitialConditions, timeHorizonYears, monthHouseIsBought) {
+function computeFinalNetWorth(Parameters, InitialConditions, timeHorizonYears, monthHouseIsBought) {
     // Extract parameters and initial conditions
     const monthlyInterestRate = Parameters.MortgageInterestRateYearly / 12;
     const returnOnSavingsMonthly = Parameters.ReturnOnSavingsYearly / 12;
