@@ -1,0 +1,80 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+.container {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 80%; /* Adjusted for better layout on wide screens */
+}
+
+#form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#form label {
+    display: block;
+    margin-top: 20px;
+    width: 100%; /* Ensure labels take full width */
+}
+
+.slider {
+    -webkit-appearance: none; /* Override default CSS styles */
+    appearance: none;
+    width: 60%; /* Adjusted to take 70% of the width */
+    height: 8px; /* Specified height */
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+    margin: 10px 0; /* Space between sliders */
+    border-radius: 5px; /* Rounded corners for the slider track */
+}
+
+.slider:hover {
+    opacity: 1; /* Fully opaque on hover */
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default CSS styles */
+    appearance: none;
+    width: 25px; /* Width of the thumb */
+    height: 25px; /* Height of the thumb */
+    background: #007bff; /* Thumb color */
+    cursor: pointer; /* Cursor changes to pointer when hovering over the thumb */
+    border-radius: 50%; /* Rounded corners for the thumb */
+}
+
+.slider::-moz-range-thumb {
+    width: 25px; /* Width of the thumb */
+    height: 25px; /* Height of the thumb */
+    background: #007bff; /* Thumb color */
+    cursor: pointer; /* Cursor changes to pointer when hovering over the thumb */
+    border-radius: 50%; /* Rounded corners for the thumb */
+}
+
+#form button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px; /* Added space above the button */
+}
+
+#form button:hover {
+    background-color: #0056b3;
+}

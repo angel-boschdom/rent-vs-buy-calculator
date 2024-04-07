@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Buying Timing Optimization</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Optimal Time to Buy a House</h1>
+        <p>You are renting now, and you have some savings. Would you be better off buying a house in the long term, or keep renting instead? How long should you wait before buying the house? This calculator helps you answer this question.</p>
+        <h2>How to Use This Calculator</h2>
+        <p>Fill the form below, and click "Plot Results". The graph shows how your final worth at the end of the Time Horizon changes depending on how many years you wait before buying the house.</p>
+        <p>Pay attention to the maximum net worth in the graph. If the maximum net worth is at the end of the time horizon, this means that you are better off renting the entire period and not buying a house at all.</p>
+        <p>If the maximum net worth is at the beginning of the time horizon, this means you are better off buying the house as soon as possible.</p>
+        <p>If the maximum net worth is somewhere in between, that is the optimal time to wait before buying the house.</p>
+
+        <div id="form">
+
+            <h3>Mortgage Parameters</h3>
+
+            <label for="housePrice">House Price (GBP): <span id="housePriceValue">215000</span></label>
+            <input type="range" id="housePrice" min="50000" max="1000000" value="215000" step="1000" class="slider">
+
+            <label for="mortgageDurationYears">Mortgage Duration (Years): </label>
+            <input type="number" id="mortgageDurationYears" min="1" max="50" value="25" step="1" class="spinner">
+
+            <label for="mortgageInterestRateYearly">Mortgage Interest Rate Yearly (%): </label>
+            <input type="number" id="mortgageInterestRateYearly" min="0" max="20" value="4.5" step="0.1" class="spinner">
+ 
+            <label for="downPaymentPercent">Down Payment Percent (%): </label>
+            <input type="number" id="downPaymentPercent" min="0" max="100" value="20" step="0.1" class="spinner">
+
+            <h3>Initial Conditions</h3>
+
+            <label for="savings">Savings (GBP): <span id="savingsValue">5000</span></label>
+            <input type="range" id="savings" min="0" max="500000" value="5000" step="1000" class="slider">
+
+            <label for="monthlyRent">Monthly Rent (GBP): <span id="monthlyRentValue">970</span></label>
+            <input type="range" id="monthlyRent" min="500" max="5000" value="970" step="10" class="slider">
+
+            <label for="monthlyExpensesExceptRent">Monthly Expenses Except Rent (GBP): <span id="monthlyExpensesExceptRentValue">700</span></label>
+            <input type="range" id="monthlyExpensesExceptRent" min="0" max="5000" value="700" step="10" class="slider">
+
+            <label for="monthlyNetSalary">Monthly Net Salary (GBP): <span id="monthlyNetSalaryValue">2500</span></label>
+            <input type="range" id="monthlyNetSalary" min="1000" max="10000" value="2500" step="10" class="slider">
+
+            <h3>Rates of Change</h3>
+ 
+             <label for="returnOnSavingsYearly">Yearly Return On Savings (%): </label>
+             <input type="number" id="returnOnSavingsYearly" min="0" max="30" value="5.5" step="0.1" class="spinner">
+ 
+             <label for="yearlyRentIncrease">Yearly Rent Increase (%): </label>
+             <input type="number" id="yearlyRentIncrease" min="0" max="20" value="4.0" step="0.1" class="spinner">
+ 
+             <label for="yearlyInterestOnDebt">Yearly Interest On Non-Mortgage Debt (%): </label>
+             <input type="number" id="yearlyInterestOnDebt" min="0" max="60" value="15.0" step="0.1" class="spinner">
+
+             <h3>Time Horizon</h3>
+
+             <label for="timeHorizonYears">Time Horizon (Years): <span id="timeHorizonYearsValue">40</span></label>
+             <input type="range" id="timeHorizonYears" min="1" max="60" value="40" step="1" class="slider">
+
+ 
+            <button id="plotResults">Plot Results</button>
+        </div>
+        <canvas id="resultsChart"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
