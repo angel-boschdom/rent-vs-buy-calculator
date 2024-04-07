@@ -17,6 +17,12 @@ body {
     width: 80%; /* Adjusted for better layout on wide screens */
 }
 
+#resultsChart {
+    width: 100%; /* Adjust to your preference */
+    height: 500px; /* Adjust to your preference */
+    max-width: 100%; /* Ensure it doesn't overflow its container */
+}
+
 #form {
     display: flex;
     flex-direction: column;
