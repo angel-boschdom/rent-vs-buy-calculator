@@ -67,13 +67,13 @@ function plotResults(parameters, initialConditions, timeHorizonYears) {
                 x: {
                     title: {
                         display: true,
-                        text: 'Time Of House Purchase (Years)'
+                        text: 'How long you waited to buy the house (Years)'
                     },
                 },
                 y: {
                     title: {
                         display: true,
-                        text: 'Final Net Worth (GBP)'
+                        text: 'Savings + HouseEquity - Debts (GBP)'
                     }
                 }
             }
