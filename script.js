@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
             MortgageDurationYears: parseFloat(document.getElementById('mortgageDurationYears').value),
             MortgageInterestRateYearly: parseFloat(document.getElementById('mortgageInterestRateYearly').value) / 100,
             DownPaymentPercent: parseFloat(document.getElementById('downPaymentPercent').value) / 100,
-            ReturnOnSavingsYearly: parseFloat(document.getElementById('returnOnSavingsYearly').value) / 100,
+            YearlyReturnOnSavings: parseFloat(document.getElementById('yearlyReturnOnSavings').value) / 100,
             YearlyNetSalaryGrowth: parseFloat(document.getElementById('yearlyNetSalaryGrowth').value) / 100,
             YearlyHousePriceGrowth: parseFloat(document.getElementById('yearlyHousePriceGrowth').value) / 100,
             YearlyRentIncrease: parseFloat(document.getElementById('yearlyRentIncrease').value) / 100,
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
 let myChart = null; // This variable will hold the chart instance
 
 function plotResults(parameters, initialConditions, timeHorizonYears) {
-    const yearsToWait = Array.from({length: timeHorizonYears}, (_, i) => i + 1);
+    const yearsToWait = Array.from({length: timeHorizonYears}, (_, i) => i);
     const finalNetWorthForThisCase = yearsToWait.map(year => computeFinalNetWorth(parameters, initialConditions, timeHorizonYears, year));
 
     const ctx = document.getElementById('resultsChart').getContext('2d');
@@ -76,7 +76,7 @@ function plotResults(parameters, initialConditions, timeHorizonYears) {
                 y: {
                     title: {
                         display: true,
-                        text: 'Savings + HouseValue - MortgageDebt (GBP)'
+                        text: 'Savings + HouseValue - MortgageDebt (GBP)' 
                     }
                 }
             }
