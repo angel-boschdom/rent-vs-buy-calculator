@@ -15,10 +15,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const monthlyExpensesExceptRent = parseFloat(document.getElementById('monthlyExpensesExceptRent').value);
 
         const parameters = {
+            MortgageDurationYears: parseFloat(document.getElementById('mortgageDurationYears').value),
             MortgageInterestRateYearly: parseFloat(document.getElementById('mortgageInterestRateYearly').value) / 100,
             DownPaymentPercent: parseFloat(document.getElementById('downPaymentPercent').value) / 100,
-            MortgageDurationYears: parseFloat(document.getElementById('mortgageDurationYears').value),
             ReturnOnSavingsYearly: parseFloat(document.getElementById('returnOnSavingsYearly').value) / 100,
+            YearlyNetSalaryGrowth: parseFloat(document.getElementById('yearlyNetSalaryGrowth').value) / 100,
+            YearlyHousePriceGrowth: parseFloat(document.getElementById('yearlyHousePriceGrowth').value) / 100,
             YearlyRentIncrease: parseFloat(document.getElementById('yearlyRentIncrease').value) / 100,
             YearlyInterestOnDebt: parseFloat(document.getElementById('yearlyInterestOnDebt').value) / 100
         };
@@ -40,8 +42,8 @@ document.addEventListener('DOMContentLoaded', function() {
 let myChart = null; // This variable will hold the chart instance
 
 function plotResults(parameters, initialConditions, timeHorizonYears) {
-    const monthsToWait = Array.from({length: timeHorizonYears * 12 - 1}, (_, i) => i + 1);
-    const finalNetWorthForThisCase = monthsToWait.map(month => computeFinalNetWorth(parameters, initialConditions, timeHorizonYears, month));
+    const yearsToWait = Array.from({length: timeHorizonYears}, (_, i) => i + 1);
+    const finalNetWorthForThisCase = yearsToWait.map(year => computeFinalNetWorth(parameters, initialConditions, timeHorizonYears, year));
 
     const ctx = document.getElementById('resultsChart').getContext('2d');
     
@@ -54,7 +56,7 @@ function plotResults(parameters, initialConditions, timeHorizonYears) {
     myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: monthsToWait.map(month => (month / 12).toFixed(1)),
+            labels: yearsToWait,
             datasets: [{
                 label: 'Final Net Worth (GBP) at End of Time Horizon',
                 data: finalNetWorthForThisCase,
@@ -73,7 +75,7 @@ function plotResults(parameters, initialConditions, timeHorizonYears) {
                 y: {
                     title: {
                         display: true,
-                        text: 'Savings + HouseEquity - Debts (GBP)'
+                        text: 'Savings + HouseValue - MortgageDebt (GBP)'
                     }
                 }
             }
@@ -81,68 +83,103 @@ function plotResults(parameters, initialConditions, timeHorizonYears) {
     });
 }
 
-function computeFinalNetWorth(Parameters, InitialConditions, timeHorizonYears, monthHouseIsBought) {
-    // Extract parameters and initial conditions
-    const monthlyInterestRate = Parameters.MortgageInterestRateYearly / 12;
-    const returnOnSavingsMonthly = Parameters.ReturnOnSavingsYearly / 12;
-    const monthlyRentIncreasePercent = Parameters.YearlyRentIncrease / 12;
+function computeFinalNetWorth(Parameters, InitialConditions, timeHorizonYears, yearHouseIsBought) {
+    // Extract parameters
+    const yearlyInterestRate = Parameters.MortgageInterestRateYearly;
+    const returnOnSavingsYearly = Parameters.YearlyReturnOnSavings;
+    const salaryGrowthYearly = Parameters.YearlyNetSalaryGrowth;
+    const housePriceGrowthYearly = Parameters.YearlyHousePriceGrowth;
+    const yearlyRentIncreasePercent = Parameters.YearlyRentIncrease;
+    const yearlyExpensesIncreasePercent = Parameters.YearlyExpensesIncrease;
     const downPaymentPercent = Parameters.DownPaymentPercent;
-    const mortgageDurationMonths = Parameters.MortgageDurationYears * 12;
-    const monthlyInterestOnNonMortgageDebt = Parameters.YearlyInterestOnDebt / 12;
-    const housePrice = InitialConditions.HousePrice;
-    const savings = InitialConditions.Savings;
-    const monthlyRent = InitialConditions.MonthlyRent;
-    const monthlyNetSalary = InitialConditions.MonthlyNetSalary;
-    const monthlyExpensesExceptRent = InitialConditions.MonthlyExpensesExceptRent;
-  
-    // Calculate down payment and initial mortgage amount
-    const downPayment = downPaymentPercent * housePrice;
-    let mortgageAmount = housePrice - downPayment;
-  
-    // Calculate monthly mortgage payment using the formula for fixed-rate mortgages
-    const monthlyMortgagePayment = mortgageAmount * (monthlyInterestRate * Math.pow((1 + monthlyInterestRate), mortgageDurationMonths)) / (Math.pow((1 + monthlyInterestRate), mortgageDurationMonths) - 1);
-  
-    // Initialize variables to track savings and expenses
-    let totalSavings = savings;
-    const monthsToWait = monthHouseIsBought - 1; // Convert to 0-based indexing for calculations
-    let monthlyRentVar = monthlyRent; // To allow monthly rent to be updated
+    const mortgageDurationYears = Parameters.MortgageDurationYears;
+    const yearlyInterestOnNonMortgageDebt = Parameters.YearlyInterestOnDebt;
+
+    // Extract initial conditions
+    let housePrice = InitialConditions.HousePrice;
+    let savings = InitialConditions.Savings;
+    let yearlyRent = InitialConditions.MonthlyRent * 12;
+    let yearlyNetSalary = InitialConditions.MonthlyNetSalary * 12;
+    let yearlyExpensesExceptRent = InitialConditions.MonthlyExpensesExceptRent * 12;
     
-    // Calculate financial situation until the house is bought
-    for (let month = 1; month <= monthsToWait; month++) {
-      totalSavings *= (1 + returnOnSavingsMonthly); // Increase savings by monthly ROI
-      monthlyRentVar *= (1 + monthlyRentIncreasePercent);
-      totalSavings += (monthlyNetSalary - monthlyRentVar - monthlyExpensesExceptRent); // Add net income
+    // Initialize variables
+    let thisYear = 0; // time iterator
+    let houseHasBeenBought = false;
+    let totalSavings = savings;
+    let mortgageDebtOutstanding = 0;
+
+    // Renting period begins
+    while (thisYear < yearHouseIsBought && thisYear < timeHorizonYears) {
+        thisYear++; // increase time
+        // Apply growth in this year
+        if (totalSavings > 0) {
+            totalSavings *= (1 + returnOnSavingsYearly); // Increase savings by yearly ROI
+        } else {
+            totalSavings *= (1 + yearlyInterestOnNonMortgageDebt); // consider adding debt interest rate
+        }
+        housePrice *= (1 + housePriceGrowthYearly);
+        yearlyNetSalary *= (1 + salaryGrowthYearly);
+        yearlyExpensesExceptRent *= (1 + yearlyExpensesIncreasePercent);
+        yearlyRent *= (1 + yearlyRentIncreasePercent);
+        // Savings balance
+        totalSavings += (yearlyNetSalary - yearlyRent - yearlyExpensesExceptRent);
     }
-  
-    // Update savings to account for down payment
-    totalSavings -= downPayment;
-    let debtOutstanding = housePrice - downPayment;
-    let equityInHouse = downPayment;
-  
-    // Calculate financial situation from house purchase to end of mortgage
-    const monthEndOfMortgage = monthsToWait + mortgageDurationMonths;
-    for (let month = monthsToWait; month <= monthEndOfMortgage; month++) {
-      if (totalSavings > 0) {
-        totalSavings *= (1 + returnOnSavingsMonthly); // Increase savings by monthly ROI
-      } else {
-        totalSavings *= (1 + monthlyInterestOnNonMortgageDebt); // consider adding debt interest rate
-      }
-      totalSavings += (monthlyNetSalary - monthlyMortgagePayment - monthlyExpensesExceptRent);
-      const interestPaidOnMortgageThisMonth = debtOutstanding * monthlyInterestRate;
-      const incrementInEquityThisMonth = monthlyMortgagePayment - interestPaidOnMortgageThisMonth;
-      equityInHouse += incrementInEquityThisMonth;
-      debtOutstanding -= incrementInEquityThisMonth;
+    
+    // House purchase event
+    if (yearHouseIsBought < timeHorizonYears) {
+        houseHasBeenBought = true;
+        // mortgage parameters
+        const downPayment = downPaymentPercent * housePrice;
+        const mortgageAmount = housePrice - downPayment;
+        const yearlyMortgagePayment = mortgageAmount * yearlyInterestRate * Math.pow((1 + yearlyInterestRate), mortgageDurationYears) / (Math.pow((1 + yearlyInterestRate), mortgageDurationYears) - 1);
+
+        // update balance after house purchase
+        totalSavings -= downPayment;
+        mortgageDebtOutstanding = housePrice - downPayment;
+
+        // Mortgage period begins
+        const yearEndOfMortgage = thisYear + mortgageDurationYears;
+        while (thisYear < yearEndOfMortgage && thisYear < timeHorizonYears) {
+            thisYear++; // increase time
+            if (totalSavings > 0) {
+                totalSavings *= (1 + returnOnSavingsYearly);
+            } else {
+                totalSavings *= (1 + yearlyInterestOnNonMortgageDebt);
+            }
+            housePrice *= (1 + housePriceGrowthYearly);
+            yearlyNetSalary *= (1 + salaryGrowthYearly);
+            yearlyExpensesExceptRent *= (1 + yearlyExpensesIncreasePercent);
+            // Mortgage balance
+            const interestPaidOnMortgageThisYear = mortgageDebtOutstanding * yearlyInterestRate;
+            const incrementInEquityThisYear = yearlyMortgagePayment - interestPaidOnMortgageThisYear;
+            mortgageDebtOutstanding -= incrementInEquityThisYear;
+            // Savings balance
+            totalSavings += (yearlyNetSalary - yearlyMortgagePayment - yearlyExpensesExceptRent);
+        }
+
+        // Post-mortgage period begins
+        while (thisYear < timeHorizonYears) {
+            thisYear++; // increase time
+            if (totalSavings > 0) {
+                totalSavings *= (1 + returnOnSavingsYearly);
+            } else {
+                totalSavings *= (1 + yearlyInterestOnNonMortgageDebt);
+            }
+            housePrice *= (1 + housePriceGrowthYearly);
+            yearlyNetSalary *= (1 + salaryGrowthYearly);
+            yearlyExpensesExceptRent *= (1 + yearlyExpensesIncreasePercent);
+            // Savings balance
+            totalSavings += (yearlyNetSalary - yearlyExpensesExceptRent);
+        }
     }
-  
-    // Calculate financial situation from end of mortgage to end of timeHorizonInYears
-    const finalMonth = timeHorizonYears * 12;
-    for (let month = monthEndOfMortgage; month <= finalMonth; month++) {
-      totalSavings *= (1 + returnOnSavingsMonthly); // Increase savings by monthly ROI
-      totalSavings += (monthlyNetSalary - monthlyExpensesExceptRent);
+
+    // Final net worth
+    let finalNetWorth;
+    if (houseHasBeenBought) {
+        finalNetWorth = totalSavings + housePrice - mortgageDebtOutstanding;
+    } else {
+        finalNetWorth = totalSavings;
     }
-  
-    // Final net worth is the total savings plus the house value because it is fully paid
-    const finalNetWorth = totalSavings + equityInHouse - debtOutstanding;
-  
+
     return finalNetWorth;
-  }
+}
