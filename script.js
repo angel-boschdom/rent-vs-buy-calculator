@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
             YearlyNetSalaryGrowth: parseFloat(document.getElementById('yearlyNetSalaryGrowth').value) / 100,
             YearlyHousePriceGrowth: parseFloat(document.getElementById('yearlyHousePriceGrowth').value) / 100,
             YearlyRentIncrease: parseFloat(document.getElementById('yearlyRentIncrease').value) / 100,
+            YearlyExpensesIncrease: parseFloat(document.getElementById('yearlyExpensesIncrease').value) / 100,
             YearlyInterestOnDebt: parseFloat(document.getElementById('yearlyInterestOnDebt').value) / 100
         };
 
