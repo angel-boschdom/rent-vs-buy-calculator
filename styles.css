@@ -3,33 +3,36 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
+    flex-direction: column; /* Change to column to stack elements vertically */
     justify-content: center;
     align-items: center;
     background-color: #f0f0f0;
+    min-height: 100vh; /* Make sure the body takes at least the viewport height */
 }
 
-.container {
+.container, #timeseriesControls, canvas {
     text-align: center;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 90%; /* Adjusted for better layout on wide screens */
+    margin-bottom: 20px; /* Add space between elements */
 }
 
-#form {
+#form, #timeseriesControls {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-#form label {
+#form label, #timeseriesControls label {
     display: block;
     margin-top: 20px;
     width: 100%; /* Ensure labels take full width */
 }
 
-.slider {
+.slider, #timeseriesControls input[type="range"] {
     -webkit-appearance: none; /* Override default CSS styles */
     appearance: none;
     width: 60%; /* Adjusted to take 70% of the width */
@@ -43,29 +46,7 @@ body {
     border-radius: 5px; /* Rounded corners for the slider track */
 }
 
-.slider:hover {
-    opacity: 1; /* Fully opaque on hover */
-}
-
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Override default CSS styles */
-    appearance: none;
-    width: 25px; /* Width of the thumb */
-    height: 25px; /* Height of the thumb */
-    background: #007bff; /* Thumb color */
-    cursor: pointer; /* Cursor changes to pointer when hovering over the thumb */
-    border-radius: 50%; /* Rounded corners for the thumb */
-}
-
-.slider::-moz-range-thumb {
-    width: 25px; /* Width of the thumb */
-    height: 25px; /* Height of the thumb */
-    background: #007bff; /* Thumb color */
-    cursor: pointer; /* Cursor changes to pointer when hovering over the thumb */
-    border-radius: 50%; /* Rounded corners for the thumb */
-}
-
-#form button {
+#form button, #timeseriesControls button {
     padding: 10px 20px;
     background-color: #007bff;
     color: white;
@@ -75,6 +56,6 @@ body {
     margin-top: 20px; /* Added space above the button */
 }
 
-#form button:hover {
+#form button:hover, #timeseriesControls button:hover {
     background-color: #0056b3;
 }

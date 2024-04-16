@@ -71,11 +71,22 @@
              <label for="timeHorizonYears">Time Horizon (Years): <span id="timeHorizonYearsValue">40</span></label>
              <input type="range" id="timeHorizonYears" min="1" max="60" value="40" step="1" class="slider">
 
- 
             <button id="plotResults">Plot Results</button>
         </div>
         <canvas id="resultsChart" height="400"></canvas>
     </div>
+    <div id="timeseriesControls" style="display:none;">
+        <label for="timeseriesSelect">Select timeseries to plot:</label>
+        <select id="timeseriesSelect">
+            <option value="savings">Savings (total)</option>
+            <option value="housingCosts">Housing costs (monthly)</option>
+        </select>
+
+        <label for="purchaseTimeSlider">Time of house purchase (years): </label>
+        <input type="range" id="purchaseTimeSlider" min="0" max="40" value="0" step="1" class="slider">
+        <span id="purchaseTimeValue">0</span> Years
+    </div>
+<canvas id="timeseriesChart" height="400" style="display:none;"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/rent-vs-buy-calculator/script.js"></script>
 </body>

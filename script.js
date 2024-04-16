@@ -82,28 +82,114 @@ function plotResults(parameters, initialConditions, timeHorizonYears) {
             }
         }
     });
+    
+    // Timeseries slider and chart
+    document.getElementById('timeseriesControls').style.display = 'block';
+    document.getElementById('timeseriesChart').style.display = 'block';
+    const purchaseTimeSlider = document.getElementById('purchaseTimeSlider');
+    const purchaseTimeValue = document.getElementById('purchaseTimeValue');
+    purchaseTimeSlider.max = timeHorizonYears; // Update the slider's max value to the time horizon
+    purchaseTimeValue.textContent = purchaseTimeSlider.value; // Set the initial slider value text
+
+    // Initial plot of the timeseries chart
+    let timeseriesChart = null;
+    updateTimeseriesChart(parameters, initialConditions, timeHorizonYears, purchaseTimeSlider.value);
+
+    // Event listener for the timeseries dropdown and slider
+    document.getElementById('timeseriesSelect').addEventListener('change', function() {
+        updateTimeseriesChart(parameters, initialConditions, timeHorizonYears, purchaseTimeSlider.value);
+    });
+    purchaseTimeSlider.oninput = function() {
+        purchaseTimeValue.textContent = this.value;
+        updateTimeseriesChart(parameters, initialConditions, timeHorizonYears, this.value);
+    };
+
+    function updateTimeseriesChart(parameters, initialConditions, timeHorizonYears, yearHouseIsBought) {
+        const ctxTimeseries = document.getElementById('timeseriesChart').getContext('2d');
+        const selectedTimeseries = document.getElementById('timeseriesSelect').value;
+        let timeseriesData;
+        if (selectedTimeseries === 'savings') {
+            timeseriesData = computeSavingsTimeseries(parameters, initialConditions, timeHorizonYears, yearHouseIsBought);
+        } else {
+            timeseriesData = computeHousingMonthlyCostTimeseries(parameters, initialConditions, timeHorizonYears, yearHouseIsBought);
+        }
+        const labels = Array.from({length: timeseriesData.length}, (_, i) => i + 1);
+
+        if (timeseriesChart) {
+            timeseriesChart.destroy();
+        }
+
+        timeseriesChart = new Chart(ctxTimeseries, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: selectedTimeseries === 'savings' ? 'Savings (total)' : 'Housing costs (monthly)',
+                    data: timeseriesData,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                animation: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year'
+                        },
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: selectedTimeseries === 'savings' ? 'Total Savings (GBP)' : 'Monthly Housing Costs (GBP)' 
+                        }
+                    }
+                }
+            }
+        });
+    }
 }
 
-function computeFinalNetWorth(Parameters, InitialConditions, timeHorizonYears, yearHouseIsBought) {
+function computeFinalNetWorth(parameters, initialConditions, timeHorizonYears, yearHouseIsBought) {
+    Results = runSimulation(parameters, initialConditions, timeHorizonYears, yearHouseIsBought)
+    return Results.FinalNetWorth;
+}
+
+function computeSavingsTimeseries(parameters, initialConditions, timeHorizonYears, yearHouseIsBought) {
+    Results = runSimulation(parameters, initialConditions, timeHorizonYears, yearHouseIsBought)
+    return Results.SavingsTimeseries;
+}
+
+function computeHousingMonthlyCostTimeseries(parameters, initialConditions, timeHorizonYears, yearHouseIsBought) {
+    Results = runSimulation(parameters, initialConditions, timeHorizonYears, yearHouseIsBought)
+    return Results.HousingMonthlyCostTimeseries;
+}
+
+function runSimulation(parameters, initialConditions, timeHorizonYears, yearHouseIsBought) {
     // Extract parameters
-    const yearlyInterestRate = Parameters.MortgageInterestRateYearly;
-    const returnOnSavingsYearly = Parameters.YearlyReturnOnSavings;
-    const salaryGrowthYearly = Parameters.YearlyNetSalaryGrowth;
-    const housePriceGrowthYearly = Parameters.YearlyHousePriceGrowth;
-    const yearlyRentIncreasePercent = Parameters.YearlyRentIncrease;
-    const yearlyExpensesIncreasePercent = Parameters.YearlyExpensesIncrease;
-    const downPaymentPercent = Parameters.DownPaymentPercent;
-    const mortgageDurationYears = Parameters.MortgageDurationYears;
-    const yearlyInterestOnNonMortgageDebt = Parameters.YearlyInterestOnDebt;
+    const yearlyInterestRate = parameters.MortgageInterestRateYearly;
+    const returnOnSavingsYearly = parameters.YearlyReturnOnSavings;
+    const salaryGrowthYearly = parameters.YearlyNetSalaryGrowth;
+    const housePriceGrowthYearly = parameters.YearlyHousePriceGrowth;
+    const yearlyRentIncreasePercent = parameters.YearlyRentIncrease;
+    const yearlyExpensesIncreasePercent = parameters.YearlyExpensesIncrease;
+    const downPaymentPercent = parameters.DownPaymentPercent;
+    const mortgageDurationYears = parameters.MortgageDurationYears;
+    const yearlyInterestOnNonMortgageDebt = parameters.YearlyInterestOnDebt;
 
     // Extract initial conditions
-    let housePrice = InitialConditions.HousePrice;
-    let savings = InitialConditions.Savings;
-    let yearlyRent = InitialConditions.MonthlyRent * 12;
-    let yearlyNetSalary = InitialConditions.MonthlyNetSalary * 12;
-    let yearlyExpensesExceptRent = InitialConditions.MonthlyExpensesExceptRent * 12;
-    
-    // Initialize variables
+    let housePrice = initialConditions.HousePrice;
+    let savings = initialConditions.Savings;
+    let yearlyRent = initialConditions.MonthlyRent * 12;
+    let yearlyNetSalary = initialConditions.MonthlyNetSalary * 12;
+    let yearlyExpensesExceptRent = initialConditions.MonthlyExpensesExceptRent * 12;
+
+    // State variable size initialization
+    let savingsTimeseries = [];
+    let housingMonthlyCostTimeseries = [];
+
+    // Variables at t=0
     let thisYear = 0; // time iterator
     let houseHasBeenBought = false;
     let totalSavings = savings;
@@ -124,15 +210,18 @@ function computeFinalNetWorth(Parameters, InitialConditions, timeHorizonYears, y
         yearlyRent *= (1 + yearlyRentIncreasePercent);
         // Savings balance
         totalSavings += (yearlyNetSalary - yearlyRent - yearlyExpensesExceptRent);
+        // Pass value to state variable for this year
+        savingsTimeseries.push(totalSavings);
+        housingMonthlyCostTimeseries.push(yearlyRent / 12);
     }
-    
+
     // House purchase event
     if (yearHouseIsBought < timeHorizonYears) {
         houseHasBeenBought = true;
         // mortgage parameters
         const downPayment = downPaymentPercent * housePrice;
         const mortgageAmount = housePrice - downPayment;
-        const yearlyMortgagePayment = mortgageAmount * yearlyInterestRate * Math.pow((1 + yearlyInterestRate), mortgageDurationYears) / (Math.pow((1 + yearlyInterestRate), mortgageDurationYears) - 1);
+        const yearlyMortgagePayment = (mortgageAmount * yearlyInterestRate * Math.pow((1 + yearlyInterestRate), mortgageDurationYears)) / (Math.pow((1 + yearlyInterestRate), mortgageDurationYears) - 1);
 
         // update balance after house purchase
         totalSavings -= downPayment;
@@ -142,10 +231,11 @@ function computeFinalNetWorth(Parameters, InitialConditions, timeHorizonYears, y
         const yearEndOfMortgage = thisYear + mortgageDurationYears;
         while (thisYear < yearEndOfMortgage && thisYear < timeHorizonYears) {
             thisYear++; // increase time
+            // Apply growth in this year
             if (totalSavings > 0) {
-                totalSavings *= (1 + returnOnSavingsYearly);
+                totalSavings *= (1 + returnOnSavingsYearly); // Increase savings by yearly ROI
             } else {
-                totalSavings *= (1 + yearlyInterestOnNonMortgageDebt);
+                totalSavings *= (1 + yearlyInterestOnNonMortgageDebt); // consider adding debt interest rate
             }
             housePrice *= (1 + housePriceGrowthYearly);
             yearlyNetSalary *= (1 + salaryGrowthYearly);
@@ -156,31 +246,37 @@ function computeFinalNetWorth(Parameters, InitialConditions, timeHorizonYears, y
             mortgageDebtOutstanding -= incrementInEquityThisYear;
             // Savings balance
             totalSavings += (yearlyNetSalary - yearlyMortgagePayment - yearlyExpensesExceptRent);
+            // Pass value to state variable for this year
+            savingsTimeseries.push(totalSavings);
+            housingMonthlyCostTimeseries.push(yearlyMortgagePayment / 12);
         }
 
         // Post-mortgage period begins
         while (thisYear < timeHorizonYears) {
             thisYear++; // increase time
+            // Apply growth in this year
             if (totalSavings > 0) {
-                totalSavings *= (1 + returnOnSavingsYearly);
+                totalSavings *= (1 + returnOnSavingsYearly); // Increase savings by yearly ROI
             } else {
-                totalSavings *= (1 + yearlyInterestOnNonMortgageDebt);
+                totalSavings *= (1 + yearlyInterestOnNonMortgageDebt); // consider adding debt interest rate
             }
             housePrice *= (1 + housePriceGrowthYearly);
             yearlyNetSalary *= (1 + salaryGrowthYearly);
             yearlyExpensesExceptRent *= (1 + yearlyExpensesIncreasePercent);
             // Savings balance
             totalSavings += (yearlyNetSalary - yearlyExpensesExceptRent);
+            // Pass value to state variable for this year
+            savingsTimeseries.push(totalSavings);
+            housingMonthlyCostTimeseries.push(0);
         }
     }
 
     // Final net worth
-    let finalNetWorth;
-    if (houseHasBeenBought) {
-        finalNetWorth = totalSavings + housePrice - mortgageDebtOutstanding;
-    } else {
-        finalNetWorth = totalSavings;
-    }
+    const finalNetWorth = houseHasBeenBought ? totalSavings + housePrice - mortgageDebtOutstanding : totalSavings;
 
-    return finalNetWorth;
+    return {
+        FinalNetWorth: finalNetWorth,
+        SavingsTimeseries: savingsTimeseries,
+        HousingMonthlyCostTimeseries: housingMonthlyCostTimeseries
+    };
 }
