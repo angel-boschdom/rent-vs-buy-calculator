@@ -21,7 +21,7 @@
             <h3>Mortgage Parameters</h3>
 
             <label for="housePrice">House Price (GBP): <span id="housePriceValue">235000</span></label>
-            <input type="range" id="housePrice" min="50000" max="900000" value="235000" step="1000" class="slider">
+            <input type="range" id="housePrice" min="50000" max="900000" value="235000" step="5000" class="slider">
 
             <label for="mortgageDurationYears">Mortgage Duration (Years): </label>
             <input type="number" id="mortgageDurationYears" min="1" max="50" value="25" step="1" class="spinner">
@@ -35,33 +35,33 @@
             <h3>Initial Conditions</h3>
 
             <label for="savings">Savings (GBP): <span id="savingsValue">5000</span></label>
-            <input type="range" id="savings" min="0" max="500000" value="5000" step="1000" class="slider">
+            <input type="range" id="savings" min="0" max="300000" value="4000" step="2000" class="slider">
 
             <label for="monthlyRent">Monthly Rent (GBP): <span id="monthlyRentValue">1000</span></label>
-            <input type="range" id="monthlyRent" min="500" max="3000" value="1000" step="10" class="slider">
+            <input type="range" id="monthlyRent" min="0" max="2500" value="1000" step="20" class="slider">
 
             <label for="monthlyExpensesExceptRent">Monthly Expenses Except Rent (GBP): <span id="monthlyExpensesExceptRentValue">1000</span></label>
-            <input type="range" id="monthlyExpensesExceptRent" min="0" max="3000" value="1000" step="10" class="slider">
+            <input type="range" id="monthlyExpensesExceptRent" min="0" max="3000" value="1000" step="20" class="slider">
 
             <label for="monthlyNetSalary">Monthly Net Salary (GBP): <span id="monthlyNetSalaryValue">2500</span></label>
-            <input type="range" id="monthlyNetSalary" min="1000" max="8000" value="2500" step="10" class="slider">
+            <input type="range" id="monthlyNetSalary" min="1000" max="8000" value="2500" step="50" class="slider">
 
             <h3>Rates of Change</h3>
  
              <label for="yearlyReturnOnSavings">Yearly Return On Savings (%): </label>
-             <input type="number" id="yearlyReturnOnSavings" min="0" max="20" value="5.5" step="0.1" class="spinner">
+             <input type="number" id="yearlyReturnOnSavings" min="0" max="20" value="4.5" step="0.1" class="spinner">
  
              <label for="yearlyNetSalaryGrowth">Yearly Net Salary Growth (%): </label>
-             <input type="number" id="yearlyNetSalaryGrowth" min="0" max="20" value="4.0" step="0.1" class="spinner">
+             <input type="number" id="yearlyNetSalaryGrowth" min="0" max="20" value="3.0" step="0.1" class="spinner">
 
              <label for="yearlyHousePriceGrowth">Yearly House Price Growth (%): </label>
-             <input type="number" id="yearlyHousePriceGrowth" min="0" max="20" value="4.0" step="0.1" class="spinner">
+             <input type="number" id="yearlyHousePriceGrowth" min="0" max="20" value="3.0" step="0.1" class="spinner">
 
              <label for="yearlyRentIncrease">Yearly Rent Increase (%): </label>
-             <input type="number" id="yearlyRentIncrease" min="0" max="20" value="4.0" step="0.1" class="spinner">
+             <input type="number" id="yearlyRentIncrease" min="0" max="20" value="3.0" step="0.1" class="spinner">
 
              <label for="yearlyExpensesIncrease">Yearly Expenses Increase (%) Except Rent: </label>
-             <input type="number" id="yearlyExpensesIncrease" min="0" max="20" value="4.0" step="0.1" class="spinner">
+             <input type="number" id="yearlyExpensesIncrease" min="0" max="20" value="3.0" step="0.1" class="spinner">
  
              <label for="yearlyInterestOnDebt">Yearly Interest On Non-Mortgage Debt (%): </label>
              <input type="number" id="yearlyInterestOnDebt" min="0" max="60" value="15.0" step="0.1" class="spinner">
@@ -73,7 +73,7 @@
 
             <button id="plotResults">Plot Results</button>
         </div>
-        <canvas id="resultsChart" height="400"></canvas>
+        <canvas id="resultsChart" height="350"></canvas>
     </div>
     <div id="timeseriesControls" style="display:none;">
         <label for="timeseriesSelect">Select timeseries to plot:</label>
@@ -86,7 +86,7 @@
         <input type="range" id="purchaseTimeSlider" min="0" max="40" value="0" step="1" class="slider">
         <span id="purchaseTimeValue">0</span> Years
     </div>
-<canvas id="timeseriesChart" height="400" style="display:none;"></canvas>
+    <canvas id="timeseriesChart" height="350" style="display:none;"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/rent-vs-buy-calculator/script.js"></script>
 </body>
