@@ -37,6 +37,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const timeHorizonYears = parseInt(document.getElementById('timeHorizonYears').value);
 
         plotResults(parameters, initialConditions, timeHorizonYears);
+
+        updateTimeseriesChart(parameters, initialConditions, timeHorizonYears, purchaseTimeSlider.value);
     });
 });
 
