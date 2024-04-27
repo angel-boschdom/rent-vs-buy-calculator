@@ -38,11 +38,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         plotResults(parameters, initialConditions, timeHorizonYears);
 
-        updateTimeseriesChart(parameters, initialConditions, timeHorizonYears, purchaseTimeSlider.value);
     });
 });
 
-let myChart = null; // This variable will hold the chart instance
+let myChart = null; // This variable will hold the main chart instance
+let timeseriesChart = null; // This variable will hold the timeseries chart instance
 
 function plotResults(parameters, initialConditions, timeHorizonYears) {
     const yearsToWait = Array.from({length: timeHorizonYears}, (_, i) => i);
@@ -94,7 +94,6 @@ function plotResults(parameters, initialConditions, timeHorizonYears) {
     purchaseTimeValue.textContent = purchaseTimeSlider.value; // Set the initial slider value text
 
     // Initial plot of the timeseries chart
-    let timeseriesChart = null;
     updateTimeseriesChart(parameters, initialConditions, timeHorizonYears, purchaseTimeSlider.value);
 
     // Event listener for the timeseries dropdown and slider
@@ -116,9 +115,10 @@ function plotResults(parameters, initialConditions, timeHorizonYears) {
             timeseriesData = computeHousingMonthlyCostTimeseries(parameters, initialConditions, timeHorizonYears, yearHouseIsBought);
         }
         const labels = Array.from({length: timeseriesData.length}, (_, i) => i + 1);
-
+    
+        // Check if a timeseries chart instance already exists
         if (timeseriesChart) {
-            timeseriesChart.destroy();
+            timeseriesChart.destroy(); // Destroy the existing timeseries chart
         }
 
         timeseriesChart = new Chart(ctxTimeseries, {
