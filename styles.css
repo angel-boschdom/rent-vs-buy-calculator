@@ -1,61 +1,132 @@
-body {
-    font-family: Arial, sans-serif;
+/* General Reset */
+* {
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column; /* Change to column to stack elements vertically */
-    justify-content: center;
-    align-items: center;
-    background-color: #f0f0f0;
-    min-height: 100vh; /* Make sure the body takes at least the viewport height */
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.container, #timeseriesControls, canvas {
-    text-align: center;
-    background-color: #ffffff;
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
     padding: 20px;
-    border-radius: 8px;
+    background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 90%; /* Adjusted for better layout on wide screens */
-    margin-bottom: 20px; /* Add space between elements */
+    text-align: center; /* Center text */
 }
 
-#form, #timeseriesControls {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+h1, h2, h3 {
+    color: #333;
 }
 
-#form label, #timeseriesControls label {
-    display: block;
+p {
+    margin-bottom: 1em;
+}
+
+/* Form Styles */
+#form {
     margin-top: 20px;
-    width: 100%; /* Ensure labels take full width */
 }
 
-.slider, #timeseriesControls input[type="range"] {
-    -webkit-appearance: none; /* Override default CSS styles */
-    appearance: none;
-    width: 60%; /* Adjusted to take 70% of the width */
-    height: 8px; /* Specified height */
-    background: #d3d3d3; /* Grey background */
-    outline: none; /* Remove outline */
-    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+.slider {
+    -webkit-appearance: none;
+    width: calc(100% - 30px); /* Adjust width to fit container if needed */
+    margin: auto; /* Center slider */
+    height: 15px;
+    border-radius: 5px;   
+    background: #ddd;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
     transition: opacity .2s;
-    margin: 10px 0; /* Space between sliders */
-    border-radius: 5px; /* Rounded corners for the slider track */
 }
 
-#form button, #timeseriesControls button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%; 
+    background: #4CAF50;
     cursor: pointer;
-    margin-top: 20px; /* Added space above the button */
 }
 
-#form button:hover, #timeseriesControls button:hover {
-    background-color: #0056b3;
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+/* Custom Radio Button Styles */
+.toggle {
+    display: flex;
+    justify-content: center; /* Center align flex items */
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.toggle input[type="radio"] {
+    display: none;
+}
+
+.toggle label {
+    background-color: #e7e7e7;
+    color: #333;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.toggle input[type="radio"]:checked + label {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Button Styles */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: inline-block; /* Center button */
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Chart Container */
+canvas {
+    margin-top: 20px;
+    display: block; /* Center canvas */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+
+    .toggle label {
+        flex: 1 1 100%;
+    }
 }

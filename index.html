@@ -24,13 +24,13 @@
             <input type="range" id="housePrice" min="50000" max="1500000" value="230000" step="10000" class="slider">
 
             <label for="mortgageDurationYears">Mortgage Duration (Years): </label>
-            <input type="number" id="mortgageDurationYears" min="1" max="50" value="25" step="1" class="spinner">
-
+            <div class="radio-button-custom" id="mortgageDurationYearsRadio"></div>
+            
             <label for="mortgageInterestRateYearly">Mortgage Interest Rate Yearly (%): </label>
-            <input type="number" id="mortgageInterestRateYearly" min="0" max="20" value="4.5" step="0.1" class="spinner">
+            <div class="radio-button-custom" id="mortgageInterestRateYearlyRadio"></div>
  
             <label for="downPaymentPercent">Down Payment Percent (%): </label>
-            <input type="number" id="downPaymentPercent" min="0" max="100" value="15" step="0.1" class="spinner">
+            <div class="radio-button-custom" id="downPaymentPercentRadio"></div>
 
             <h3>Initial Conditions</h3>
 
@@ -48,28 +48,28 @@
 
             <h3>Rates of Change</h3>
  
-             <label for="yearlyReturnOnSavings">Yearly Return On Savings (%): </label>
-             <input type="number" id="yearlyReturnOnSavings" min="0" max="20" value="4.5" step="0.1" class="spinner">
+            <label for="yearlyReturnOnSavings">Yearly Return On Savings (%): </label>
+            <div class="radio-button-custom" id="yearlyReturnOnSavingsRadio"></div>
  
-             <label for="yearlyNetSalaryGrowth">Yearly Net Salary Growth (%): </label>
-             <input type="number" id="yearlyNetSalaryGrowth" min="0" max="20" value="3.0" step="0.1" class="spinner">
+            <label for="yearlyNetSalaryGrowth">Yearly Net Salary Growth (%): </label>
+            <div class="radio-button-custom" id="yearlyNetSalaryGrowthRadio"></div>
 
-             <label for="yearlyHousePriceGrowth">Yearly House Price Growth (%): </label>
-             <input type="number" id="yearlyHousePriceGrowth" min="0" max="20" value="3.0" step="0.1" class="spinner">
+            <label for="yearlyHousePriceGrowth">Yearly House Price Growth (%): </label>
+            <div class="radio-button-custom" id="yearlyHousePriceGrowthRadio"></div>
 
-             <label for="yearlyRentIncrease">Yearly Rent Increase (%): </label>
-             <input type="number" id="yearlyRentIncrease" min="0" max="20" value="3.0" step="0.1" class="spinner">
+            <label for="yearlyRentIncrease">Yearly Rent Increase (%): </label>
+            <div class="radio-button-custom" id="yearlyRentIncreaseRadio"></div>
 
-             <label for="yearlyExpensesIncrease">Yearly Expenses Increase (%) Except Rent: </label>
-             <input type="number" id="yearlyExpensesIncrease" min="0" max="20" value="3.0" step="0.1" class="spinner">
+            <label for="yearlyExpensesIncrease">Yearly Expenses Increase (%) Except Rent: </label>
+            <div class="radio-button-custom" id="yearlyExpensesIncreaseRadio"></div>
  
-             <label for="yearlyInterestOnDebt">Yearly Interest On Non-Mortgage Debt (%): </label>
-             <input type="number" id="yearlyInterestOnDebt" min="0" max="60" value="15.0" step="0.1" class="spinner">
+            <label for="yearlyInterestOnDebt">Yearly Interest On Non-Mortgage Debt (%): </label>
+            <div class="radio-button-custom" id="yearlyInterestOnDebtRadio"></div>
 
-             <h3>Time Horizon</h3>
+            <h3>Time Horizon</h3>
 
-             <label for="timeHorizonYears">Time Horizon (Years): <span id="timeHorizonYearsValue">40</span></label>
-             <input type="range" id="timeHorizonYears" min="1" max="60" value="35" step="1" class="slider">
+            <label for="timeHorizonYears">Time Horizon (Years): <span id="timeHorizonYearsValue">40</span></label>
+            <input type="range" id="timeHorizonYears" min="1" max="60" value="35" step="1" class="slider">
 
             <button id="plotResults">Plot Results</button>
         </div>
@@ -88,5 +88,6 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/rent-vs-buy-calculator/script.js"></script>
+    <script src="/rent-vs-buy-calculator/uicomponents/RadioButtonCustom.js"></script>
 </body>
 </html>

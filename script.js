@@ -1,4 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Instantiate RadioButtonCustom objects for mortgage parameters
+    const mortgageDurationYearsRadio = new RadioButtonCustom('mortgageDurationYearsRadio', [20, 25, 30], 2);
+
+    // Instantiate RadioButtonCustom objects for interest rate, down payment, and other parameters
+    const mortgageInterestRateYearlyRadio = new RadioButtonCustom('mortgageInterestRateYearlyRadio', [3.0, 4.5, 6.0], 3);
+    const downPaymentPercentRadio = new RadioButtonCustom('downPaymentPercentRadio', [5, 10, 15, 20], 2);
+
+    // Instantiate RadioButtonCustom objects for rates of change
+    const yearlyReturnOnSavingsRadio = new RadioButtonCustom('yearlyReturnOnSavingsRadio', [0, 4, 8], 1);
+    const yearlyNetSalaryGrowthRadio = new RadioButtonCustom('yearlyNetSalaryGrowthRadio', [0, 3, 6], 2);
+    const yearlyHousePriceGrowthRadio = new RadioButtonCustom('yearlyHousePriceGrowthRadio', [0, 3, 6], 2);
+    const yearlyRentIncreaseRadio = new RadioButtonCustom('yearlyRentIncreaseRadio', [0, 3, 6], 2);
+    const yearlyExpensesIncreaseRadio = new RadioButtonCustom('yearlyExpensesIncreaseRadio', [0, 3, 6], 2);
+    const yearlyInterestOnDebtRadio = new RadioButtonCustom('yearlyInterestOnDebtRadio', [5, 10, 15], 3);
+
+    // Handle slider inputs
     const sliders = document.querySelectorAll('.slider');
     sliders.forEach(slider => {
         slider.addEventListener('input', function() {
@@ -7,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Handle "Plot Results" button click
     document.getElementById('plotResults').addEventListener('click', function() {
         const housePrice = parseFloat(document.getElementById('housePrice').value);
         const savings = parseFloat(document.getElementById('savings').value);
@@ -15,15 +32,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const monthlyExpensesExceptRent = parseFloat(document.getElementById('monthlyExpensesExceptRent').value);
 
         const parameters = {
-            MortgageDurationYears: parseFloat(document.getElementById('mortgageDurationYears').value),
-            MortgageInterestRateYearly: parseFloat(document.getElementById('mortgageInterestRateYearly').value) / 100,
-            DownPaymentPercent: parseFloat(document.getElementById('downPaymentPercent').value) / 100,
-            YearlyReturnOnSavings: parseFloat(document.getElementById('yearlyReturnOnSavings').value) / 100,
-            YearlyNetSalaryGrowth: parseFloat(document.getElementById('yearlyNetSalaryGrowth').value) / 100,
-            YearlyHousePriceGrowth: parseFloat(document.getElementById('yearlyHousePriceGrowth').value) / 100,
-            YearlyRentIncrease: parseFloat(document.getElementById('yearlyRentIncrease').value) / 100,
-            YearlyExpensesIncrease: parseFloat(document.getElementById('yearlyExpensesIncrease').value) / 100,
-            YearlyInterestOnDebt: parseFloat(document.getElementById('yearlyInterestOnDebt').value) / 100
+            MortgageDurationYears: parseInt(mortgageDurationYearsRadio.getValue()),
+            MortgageInterestRateYearly: parseFloat(mortgageInterestRateYearlyRadio.getValue()) / 100,
+            DownPaymentPercent: parseInt(downPaymentPercentRadio.getValue()) / 100,
+            YearlyReturnOnSavings: parseFloat(yearlyReturnOnSavingsRadio.getValue()) / 100,
+            YearlyNetSalaryGrowth: parseFloat(yearlyNetSalaryGrowthRadio.getValue()) / 100,
+            YearlyHousePriceGrowth: parseFloat(yearlyHousePriceGrowthRadio.getValue()) / 100,
+            YearlyRentIncrease: parseFloat(yearlyRentIncreaseRadio.getValue()) / 100,
+            YearlyExpensesIncrease: parseFloat(yearlyExpensesIncreaseRadio.getValue()) / 100,
+            YearlyInterestOnDebt: parseFloat(yearlyInterestOnDebtRadio.getValue()) / 100
         };
 
         const initialConditions = {
