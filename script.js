@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const downPaymentPercentRadio = new RadioButtonCustom('downPaymentPercentRadio', [5, 10, 15, 20], 2);
 
     // Instantiate RadioButtonCustom objects for rates of change
-    const yearlyReturnOnSavingsRadio = new RadioButtonCustom('yearlyReturnOnSavingsRadio', [0, 4, 8], 1);
+    const yearlyReturnOnSavingsRadio = new RadioButtonCustom('yearlyReturnOnSavingsRadio', [2, 4, 7], 1);
     const yearlyNetSalaryGrowthRadio = new RadioButtonCustom('yearlyNetSalaryGrowthRadio', [0, 3, 6], 2);
     const yearlyHousePriceGrowthRadio = new RadioButtonCustom('yearlyHousePriceGrowthRadio', [0, 3, 6], 2);
     const yearlyRentIncreaseRadio = new RadioButtonCustom('yearlyRentIncreaseRadio', [0, 3, 6], 2);
