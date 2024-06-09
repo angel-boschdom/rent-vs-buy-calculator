@@ -166,8 +166,7 @@ label[for="timeseriesSelect"], label[for="purchaseTimeSlider"] {
 }
 
 #timeseriesChart {
-    width: 90% !important; /* Make the chart width 90% of its parent container */
-    height: 400px !important;
+    width: 100% !important; /* Make the chart width 90% of its parent container */
     margin: auto; /* Center the chart if necessary */
     display: block; /* Ensure the chart is treated as a block-level element */
 }
