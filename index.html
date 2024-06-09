@@ -81,14 +81,14 @@
         <div id="timeseriesControls" style="display:none;">
             <label for="timeseriesSelect">Select timeseries to plot:</label>
             <select id="timeseriesSelect">
-                <option value="savings">Savings (total)</option>
+                <option value="savings">Savings + House Equity</option>
                 <option value="housingCosts">Housing costs (monthly)</option>
             </select>
             <label for="purchaseTimeSlider">Age at which house is purchased: </label>
             <input type="range" id="purchaseTimeSlider" min="0" max="100" value="0" step="1" class="slider">
             <span id="purchaseTimeValue">0</span> Years
         </div>
-        <canvas id="timeseriesChart" width="600" height="400" style="display:none;"></canvas>
+        <canvas id="timeseriesChart" style="display:none;"></canvas>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/rent-vs-buy-calculator/script.js"></script>

@@ -151,10 +151,6 @@ canvas {
     -webkit-appearance: none; /* Specifically for WebKit browsers */
     margin: 10px 0; /* Add some margin for spacing */
 }
-/* Style for the dropdown arrow to match the design */
-#timeseriesSelect::-ms-expand {
-    display: none; /* Hide the default arrow in IE */
-}
 
 /* Fix for timeseriesSelect and purchaseTimeSlider label wrapping */
 label[for="timeseriesSelect"], label[for="purchaseTimeSlider"] {
@@ -167,6 +163,13 @@ label[for="timeseriesSelect"], label[for="purchaseTimeSlider"] {
     display: block; /* Ensure the select and slider are also block-level elements */
     width: 100%; /* Make them take the full width of their container */
     margin: 10px 0; /* Add some margin for spacing */
+}
+
+#timeseriesChart {
+    width: 90% !important; /* Make the chart width 90% of its parent container */
+    height: 400px !important;
+    margin: auto; /* Center the chart if necessary */
+    display: block; /* Ensure the chart is treated as a block-level element */
 }
 
 /* Responsive Design */
