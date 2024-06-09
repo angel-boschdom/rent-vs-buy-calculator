@@ -11,14 +11,11 @@
         <h1>Optimal Time to Buy a House</h1>
         <p>You are renting now, and you have some savings. Would you be better off buying a house in the long term, or keep renting instead? How long should you wait before buying the house? This calculator helps you answer this question.</p>
         <h2>How to Use This Calculator</h2>
-        <p>Fill the form below, and click "Plot Results". The graph shows your long-term net worth vs how many years you wait before buying the house.</p>
-        <p>Pay attention to the maximum net worth in the graph. If the maximum net worth is at the end of the time horizon, this means that you are better off renting the entire period and not buying a house at all.</p>
-        <p>If the maximum net worth is at the beginning of the time horizon, this means you are better off buying the house as soon as possible.</p>
-        <p>If the maximum net worth is somewhere in between, that is the optimal time to wait before buying the house.</p>
-
+        <p>Fill the form below, and click "Calculate".</p>
+        
         <div id="form">
 
-            <h3>Mortgage Parameters</h3>
+            <h3>House and Mortgage</h3>
 
             <label for="housePrice">House Price (GBP): <span id="housePriceValue">325000</span></label>
             <input type="range" id="housePrice" min="50000" max="1500000" value="325000" step="10000" class="slider">
@@ -32,7 +29,7 @@
             <label for="downPaymentPercent">Down Payment Percent (%): </label>
             <div class="radio-button-custom" id="downPaymentPercentRadio"></div>
 
-            <h3>Initial Conditions</h3>
+            <h3>Current Personal Finances</h3>
 
             <label for="savings">Savings (GBP): <span id="savingsValue">34000</span></label>
             <input type="range" id="savings" min="0" max="500000" value="34000" step="2000" class="slider">
@@ -66,25 +63,32 @@
             <label for="yearlyInterestOnDebt">Yearly Interest On Non-Mortgage Debt (%): </label>
             <div class="radio-button-custom" id="yearlyInterestOnDebtRadio"></div>
 
-            <h3>Time Horizon</h3>
+            <h3>Retirement Goals</h3>
 
-            <label for="timeHorizonYears">Time Horizon (Years): <span id="timeHorizonYearsValue">40</span></label>
-            <input type="range" id="timeHorizonYears" min="1" max="60" value="35" step="1" class="slider">
+            <label for="ageYears">Age Now (Years): <span id="ageYearsValue">30</span></label>
+            <input type="range" id="ageYears" min="15" max="90" value="30" step="1" class="slider">
 
-            <button id="plotResults">Plot Results</button>
+            <label for="retirementAgeYears">Retirement Age (Years): <span id="retirementAgeYearsValue">65</span></label>
+            <input type="range" id="retirementAgeYears" min="25" max="95" value="65" step="1" class="slider">
+
+            <h3>Inflation Adjustment</h3>
+
+            <label for="yearlyInflation">Yearly Inflation Rate (%): </label>
+            <div class="radio-button-custom" id="yearlyInflationRadio"></div>
+
+            <button id="plotResults">Calculate</button>
         </div>
-        <canvas id="resultsChart" height="350"></canvas>
         <div id="timeseriesControls" style="display:none;">
             <label for="timeseriesSelect">Select timeseries to plot:</label>
             <select id="timeseriesSelect">
                 <option value="savings">Savings (total)</option>
                 <option value="housingCosts">Housing costs (monthly)</option>
             </select>
-            <label for="purchaseTimeSlider">Time of house purchase (years): </label>
-            <input type="range" id="purchaseTimeSlider" min="0" max="35" value="0" step="1" class="slider">
+            <label for="purchaseTimeSlider">Age at which house is purchased: </label>
+            <input type="range" id="purchaseTimeSlider" min="0" max="100" value="0" step="1" class="slider">
             <span id="purchaseTimeValue">0</span> Years
         </div>
-        <canvas id="timeseriesChart" height="350" style="display:none;"></canvas>
+        <canvas id="timeseriesChart" width="600" height="400" style="display:none;"></canvas>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/rent-vs-buy-calculator/script.js"></script>

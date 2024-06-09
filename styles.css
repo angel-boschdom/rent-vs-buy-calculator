@@ -5,14 +5,12 @@
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
 body {
     background-color: #f5f5f5;
     color: #333;
     font-size: 16px;
     line-height: 1.6;
 }
-
 .container {
     max-width: 800px;
     margin: 20px auto;
@@ -21,25 +19,22 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center; /* Center text */
 }
-
 h1, h2, h3 {
     color: #333;
 }
-
 p {
     margin-bottom: 1em;
 }
-
 /* Form Styles */
 #form {
     margin-top: 20px;
 }
-
-.slider {
+.slider, select {
+    appearance: none;
     -webkit-appearance: none;
     width: calc(100% - 30px); /* Adjust width to fit container if needed */
-    margin: auto; /* Center slider */
-    height: 15px;
+    margin: 10px auto; /* Center slider and select */
+    height: 25px;
     border-radius: 5px;   
     background: #ddd;
     outline: none;
@@ -47,12 +42,10 @@ p {
     -webkit-transition: .2s;
     transition: opacity .2s;
 }
-
-.slider:hover {
+.slider:hover, select:hover {
     opacity: 1;
 }
-
-.slider::-webkit-slider-thumb {
+.slider::-webkit-slider-thumb, select {
     -webkit-appearance: none;
     appearance: none;
     width: 25px;
@@ -61,13 +54,25 @@ p {
     background: #4CAF50;
     cursor: pointer;
 }
-
-.slider::-moz-range-thumb {
+.slider::-moz-range-thumb, select {
     width: 25px;
     height: 25px;
     border-radius: 50%;
     background: #4CAF50;
     cursor: pointer;
+}
+select {
+    height: 35px; /* Adjust height for select */
+    border: none; /* Remove border */
+    padding: 5px; /* Add some padding */
+    cursor: pointer; /* Change cursor to pointer */
+    background: #4CAF50; /* Match the slider thumb color */
+    color: white; /* Text color */
+    border-radius: 5px; /* Match the slider thumb border-radius */
+}
+select option {
+    background: white; /* Background color for options */
+    color: #333; /* Text color for options */
 }
 
 /* Custom Radio Button Styles */
@@ -78,11 +83,9 @@ p {
     gap: 10px;
     margin-bottom: 20px;
 }
-
 .toggle input[type="radio"] {
     display: none;
 }
-
 .toggle label {
     background-color: #e7e7e7;
     color: #333;
@@ -90,16 +93,13 @@ p {
     border-radius: 5px;
     cursor: pointer;
 }
-
 .toggle input[type="radio"]:checked + label {
     background-color: #4CAF50;
     color: white;
 }
-
 .custom-input {
     display: none;
 }
-
 .custom-input input[type="text"] {
     width: 100%;
     padding: 10px;
@@ -108,13 +108,11 @@ p {
     margin-top: 5px;
     font-size: 16px;
 }
-
 .custom-input input[type="text"]:focus {
     outline: none;
     border-color: #4CAF50;
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
-
 /* Button Styles */
 button {
     background-color: #4CAF50;
@@ -126,11 +124,9 @@ button {
     font-size: 16px;
     display: inline-block; /* Center button */
 }
-
 button:hover {
     background-color: #45a049;
 }
-
 /* Chart Container */
 canvas {
     margin-top: 20px;
@@ -139,15 +135,43 @@ canvas {
     margin-right: auto;
 }
 
+/* Additional specific style for the #timeseriesSelect dropdown */
+#timeseriesSelect {
+    width: auto; /* Adjust width based on content */
+    min-width: 200px; /* Ensure a minimum width for readability */
+    padding: 5px 10px; /* Add some padding for better appearance */
+    cursor: pointer; /* Ensure it's clear this is a selectable dropdown */
+    background-color: #4CAF50; /* Keep consistent with the theme */
+    color: white; /* Text color for better contrast */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners for consistency with design */
+    font-size: 16px; /* Ensure text is easily readable */
+    text-align: center; /* Center the text for aesthetics */
+    appearance: none; /* Remove default system appearance */
+    -webkit-appearance: none; /* Specifically for WebKit browsers */
+    margin: 10px 0; /* Add some margin for spacing */
+}
+/* Style for the dropdown arrow to match the design */
+#timeseriesSelect::-ms-expand {
+    display: none; /* Hide the default arrow in IE */
+}
+
+/* Fix for timeseriesSelect and purchaseTimeSlider label wrapping */
+label[for="timeseriesSelect"], label[for="purchaseTimeSlider"] {
+    display: block;
+    margin-top: 20px; /* Add some space above the label for better separation */
+    text-align: left; /* Align the text to the left for consistency */
+}
+
+#timeseriesSelect, #purchaseTimeSlider {
+    display: block; /* Ensure the select and slider are also block-level elements */
+    width: 100%; /* Make them take the full width of their container */
+    margin: 10px 0; /* Add some margin for spacing */
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
         width: 95%;
     }
-
-    /*
-    .toggle label {
-        flex: 1 1 90%;
-    }
-    */
 }

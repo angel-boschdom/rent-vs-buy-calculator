@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Instantiate RadioButtonCustom objects for interest rate, down payment, and other parameters
     const mortgageInterestRateYearlyRadio = new RadioButtonCustom('mortgageInterestRateYearlyRadio', [3.0, 4.5, 6.0], 3);
-    const downPaymentPercentRadio = new RadioButtonCustom('downPaymentPercentRadio', [5, 10, 15, 20], 2);
+    const downPaymentPercentRadio = new RadioButtonCustom('downPaymentPercentRadio', [5, 10, 15], 1);
 
     // Instantiate RadioButtonCustom objects for rates of change
     const yearlyReturnOnSavingsRadio = new RadioButtonCustom('yearlyReturnOnSavingsRadio', [2, 4, 7], 1);
@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const yearlyRentIncreaseRadio = new RadioButtonCustom('yearlyRentIncreaseRadio', [0, 3, 6], 2);
     const yearlyExpensesIncreaseRadio = new RadioButtonCustom('yearlyExpensesIncreaseRadio', [0, 3, 6], 2);
     const yearlyInterestOnDebtRadio = new RadioButtonCustom('yearlyInterestOnDebtRadio', [5, 10, 15], 3);
+    const yearlyInflationRadio = new RadioButtonCustom('yearlyInflationRadio', [0, 2, 4], 2);
 
     // Handle slider inputs
     const sliders = document.querySelectorAll('.slider');
@@ -40,7 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
             YearlyHousePriceGrowth: parseFloat(yearlyHousePriceGrowthRadio.getValue()) / 100,
             YearlyRentIncrease: parseFloat(yearlyRentIncreaseRadio.getValue()) / 100,
             YearlyExpensesIncrease: parseFloat(yearlyExpensesIncreaseRadio.getValue()) / 100,
-            YearlyInterestOnDebt: parseFloat(yearlyInterestOnDebtRadio.getValue()) / 100
+            YearlyInterestOnDebt: parseFloat(yearlyInterestOnDebtRadio.getValue()) / 100,
+            YearlyInflation: parseFloat(yearlyInflationRadio.getValue()) / 100
         };
 
         const initialConditions = {
@@ -51,118 +53,99 @@ document.addEventListener('DOMContentLoaded', function() {
             MonthlyExpensesExceptRent: monthlyExpensesExceptRent
         };
 
-        const timeHorizonYears = parseInt(document.getElementById('timeHorizonYears').value);
+        const ageYears = parseInt(document.getElementById('ageYears').value);
+        const retirementAgeYears = parseInt(document.getElementById('retirementAgeYears').value);
 
-        plotResults(parameters, initialConditions, timeHorizonYears);
+        plotResults(parameters, initialConditions, ageYears, retirementAgeYears);
 
     });
 });
 
-let myChart = null; // This variable will hold the main chart instance
 let timeseriesChart = null; // This variable will hold the timeseries chart instance
 
-function plotResults(parameters, initialConditions, timeHorizonYears) {
-    const yearsToWait = Array.from({length: timeHorizonYears}, (_, i) => i);
-    const finalNetWorthForThisCase = yearsToWait.map(year => computeFinalNetWorth(parameters, initialConditions, timeHorizonYears, year));
-
-    const ctx = document.getElementById('resultsChart').getContext('2d');
-    
-    // Check if a chart instance already exists
-    if (myChart) {
-        myChart.destroy(); // Destroy the existing chart
-    }
-    
-    // Create a new chart instance and assign it to the 'myChart' variable
-    myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: yearsToWait,
-            datasets: [{
-                label: 'Final Net Worth (GBP) at End of Time Horizon',
-                data: finalNetWorthForThisCase,
-                borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1
-            }]
-        },
-        options: {
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'How long you waited to buy the house (Years)'
-                    },
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Savings + HouseValue - MortgageDebt (GBP)' 
-                    }
-                }
-            }
-        }
-    });
-    
+function plotResults(parameters, initialConditions, ageYears, retirementAgeYears) {
+     
     // Timeseries slider and chart
     document.getElementById('timeseriesControls').style.display = 'block';
     document.getElementById('timeseriesChart').style.display = 'block';
     const purchaseTimeSlider = document.getElementById('purchaseTimeSlider');
     const purchaseTimeValue = document.getElementById('purchaseTimeValue');
-    purchaseTimeSlider.max = timeHorizonYears; // Update the slider's max value to the time horizon
+    purchaseTimeSlider.min = ageYears; // Update the slider's min value to ageYears
     purchaseTimeValue.textContent = purchaseTimeSlider.value; // Set the initial slider value text
 
+    // Find optimal age to buy
+    const optimalTimeToBuy = findOptimalAgeHouseIsBought(parameters, initialConditions, ageYears, retirementAgeYears);
+    const maxNetWorthPossible = computeMaxNetWorth(parameters, initialConditions, ageYears, retirementAgeYears, optimalTimeToBuy);
+    
+    // Set initial timeseries slider value equal to optimal age to buy
+    purchaseTimeSlider.value = optimalTimeToBuy;
+    
     // Initial plot of the timeseries chart
-    updateTimeseriesChart(parameters, initialConditions, timeHorizonYears, purchaseTimeSlider.value);
+    updateTimeseriesChart(parameters, initialConditions, ageYears, retirementAgeYears, purchaseTimeSlider.value);
 
     // Event listener for the timeseries dropdown and slider
     document.getElementById('timeseriesSelect').addEventListener('change', function() {
-        updateTimeseriesChart(parameters, initialConditions, timeHorizonYears, purchaseTimeSlider.value);
+        updateTimeseriesChart(parameters, initialConditions, ageYears, retirementAgeYears, purchaseTimeSlider.value);
     });
     purchaseTimeSlider.oninput = function() {
         purchaseTimeValue.textContent = this.value;
-        updateTimeseriesChart(parameters, initialConditions, timeHorizonYears, this.value);
+        updateTimeseriesChart(parameters, initialConditions, ageYears, retirementAgeYears, this.value);
     };
 
-    function updateTimeseriesChart(parameters, initialConditions, timeHorizonYears, yearHouseIsBought) {
+    function updateTimeseriesChart(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought) {
         const ctxTimeseries = document.getElementById('timeseriesChart').getContext('2d');
         const selectedTimeseries = document.getElementById('timeseriesSelect').value;
-        let timeseriesData;
+        let savingsData, totalNetWorthData;
         if (selectedTimeseries === 'savings') {
-            timeseriesData = computeSavingsTimeseries(parameters, initialConditions, timeHorizonYears, yearHouseIsBought);
+            savingsData = computeSavingsTimeseries(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought);
+            totalNetWorthData = computeTotalNetWorthTimeseries(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought);
         } else {
-            timeseriesData = computeHousingMonthlyCostTimeseries(parameters, initialConditions, timeHorizonYears, yearHouseIsBought);
+            console.error('Selected timeseries not supported for dual-chart display.');
+            return;
         }
-        const labels = Array.from({length: timeseriesData.length}, (_, i) => i + 1);
+        const labels = Array.from({length: savingsData.length}, (_, i) => i + ageYears);
     
-        // Check if a timeseries chart instance already exists
         if (timeseriesChart) {
-            timeseriesChart.destroy(); // Destroy the existing timeseries chart
+            timeseriesChart.destroy();
         }
-
+    
         timeseriesChart = new Chart(ctxTimeseries, {
             type: 'line',
             data: {
                 labels: labels,
-                datasets: [{
-                    label: selectedTimeseries === 'savings' ? 'Savings (total)' : 'Housing costs (monthly)',
-                    data: timeseriesData,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                }]
+                datasets: [
+                    {
+                        label: 'Savings (Area)',
+                        data: savingsData,
+                        borderColor: 'rgb(0, 100, 0, 0.5)',
+                        backgroundColor: 'rgba(0, 100, 0, 0.5)',
+                        fill: true,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'House Equity (Area)',
+                        data: totalNetWorthData,
+                        borderColor: 'rgb(152, 251, 152, 0.5)',
+                        backgroundColor: 'rgba(152, 251, 152, 0.5)',
+                        fill: true,
+                        tension: 0.1
+                    }
+                ]
             },
             options: {
-                animation: false,
+                animation: {
+                    duration: 0 // Remove animation
+                },
                 scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Year'
-                        },
-                    },
                     y: {
-                        title: {
-                            display: true,
-                            text: selectedTimeseries === 'savings' ? 'Total Savings (GBP)' : 'Monthly Housing Costs (GBP)' 
-                        }
+                        beginAtZero: true,
+                        min: 0, // Set Y-axis min to 0
+                        max: maxNetWorthPossible // Set Y-axis max to maxNetWorthPossible
+                    }
+                },
+                plugins: {
+                    filler: {
+                        propagate: false
                     }
                 }
             }
@@ -170,22 +153,44 @@ function plotResults(parameters, initialConditions, timeHorizonYears) {
     }
 }
 
-function computeFinalNetWorth(parameters, initialConditions, timeHorizonYears, yearHouseIsBought) {
-    Results = runSimulation(parameters, initialConditions, timeHorizonYears, yearHouseIsBought)
-    return Results.FinalNetWorth;
+function computeMaxNetWorth(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought) {
+    Results = runSimulation(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought)
+    return Results.MaxNetWorth;
 }
 
-function computeSavingsTimeseries(parameters, initialConditions, timeHorizonYears, yearHouseIsBought) {
-    Results = runSimulation(parameters, initialConditions, timeHorizonYears, yearHouseIsBought)
+function findOptimalAgeHouseIsBought(parameters, initialConditions, ageYears, retirementAgeYears) {
+    // Set final age (time horizon)
+    const finalAge = 100;
+    // Generate an array of ages from current age to final age
+    const ages = Array.from({ length: finalAge - ageYears + 1 }, (_, index) => ageYears + index);
+    // Compute max net worth for each possible age of house purchase
+    const maxNetWorthForThisCase = ages.map(thisAge => computeMaxNetWorth(parameters, initialConditions, ageYears, retirementAgeYears, thisAge));
+    // Find the maximum net worth value
+    const maxNetWorthValue = Math.max(...maxNetWorthForThisCase);
+    // Find the index of the maximum net worth value, which corresponds to the optimal age offset from the current age
+    const optimalAgeIndex = maxNetWorthForThisCase.findIndex(netWorth => netWorth === maxNetWorthValue);
+    // Find the optimal age for buying the house using the index
+    const optimalAgeHouseIsBought = ages[optimalAgeIndex];
+    
+    return optimalAgeHouseIsBought;
+}
+
+function computeSavingsTimeseries(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought) {
+    Results = runSimulation(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought)
     return Results.SavingsTimeseries;
 }
 
-function computeHousingMonthlyCostTimeseries(parameters, initialConditions, timeHorizonYears, yearHouseIsBought) {
-    Results = runSimulation(parameters, initialConditions, timeHorizonYears, yearHouseIsBought)
+function computeTotalNetWorthTimeseries(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought) {
+    Results = runSimulation(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought)
+    return Results.TotalNetWorthTimeseries;
+}
+
+function computeHousingMonthlyCostTimeseries(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought) {
+    Results = runSimulation(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought)
     return Results.HousingMonthlyCostTimeseries;
 }
 
-function runSimulation(parameters, initialConditions, timeHorizonYears, yearHouseIsBought) {
+function runSimulation(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought) {
     // Extract parameters
     const yearlyInterestRate = parameters.MortgageInterestRateYearly;
     const returnOnSavingsYearly = parameters.YearlyReturnOnSavings;
@@ -196,7 +201,8 @@ function runSimulation(parameters, initialConditions, timeHorizonYears, yearHous
     const downPaymentPercent = parameters.DownPaymentPercent;
     const mortgageDurationYears = parameters.MortgageDurationYears;
     const yearlyInterestOnNonMortgageDebt = parameters.YearlyInterestOnDebt;
-
+    const yearlyInflation = parameters.YearlyInflation;
+    
     // Extract initial conditions
     let housePrice = initialConditions.HousePrice;
     let savings = initialConditions.Savings;
@@ -204,38 +210,47 @@ function runSimulation(parameters, initialConditions, timeHorizonYears, yearHous
     let yearlyNetSalary = initialConditions.MonthlyNetSalary * 12;
     let yearlyExpensesExceptRent = initialConditions.MonthlyExpensesExceptRent * 12;
 
+    // Set final age (time horizon)
+    let finalAge = 100;
+
     // State variable size initialization
     let savingsTimeseries = [];
+    let totalNetWorthTimeseries = [];
     let housingMonthlyCostTimeseries = [];
 
     // Variables at t=0
-    let thisYear = 0; // time iterator
+    let thisYear = ageYears; // time iterator
     let houseHasBeenBought = false;
     let totalSavings = savings;
     let mortgageDebtOutstanding = 0;
 
     // Renting period begins
-    while (thisYear < yearHouseIsBought && thisYear < timeHorizonYears) {
+    while (thisYear < ageHouseIsBought) {
         thisYear++; // increase time
         // Apply growth in this year
         if (totalSavings > 0) {
             totalSavings *= (1 + returnOnSavingsYearly); // Increase savings by yearly ROI
         } else {
-            totalSavings *= (1 + yearlyInterestOnNonMortgageDebt); // consider adding debt interest rate
+            totalSavings *= (1 + yearlyInterestOnNonMortgageDebt); // Decrease savings by yearly debt interest
         }
         housePrice *= (1 + housePriceGrowthYearly);
         yearlyNetSalary *= (1 + salaryGrowthYearly);
         yearlyExpensesExceptRent *= (1 + yearlyExpensesIncreasePercent);
         yearlyRent *= (1 + yearlyRentIncreasePercent);
+        // Check if already retired
+        if (thisYear > retirementAgeYears) {
+            yearlyNetSalary = 0;
+        } 
         // Savings balance
         totalSavings += (yearlyNetSalary - yearlyRent - yearlyExpensesExceptRent);
         // Pass value to state variable for this year
         savingsTimeseries.push(totalSavings);
+        totalNetWorthTimeseries.push(totalSavings);
         housingMonthlyCostTimeseries.push(yearlyRent / 12);
     }
 
     // House purchase event
-    if (yearHouseIsBought < timeHorizonYears) {
+    if (ageHouseIsBought < finalAge) {
         houseHasBeenBought = true;
         // mortgage parameters
         const downPayment = downPaymentPercent * housePrice;
@@ -248,17 +263,21 @@ function runSimulation(parameters, initialConditions, timeHorizonYears, yearHous
 
         // Mortgage period begins
         const yearEndOfMortgage = thisYear + mortgageDurationYears;
-        while (thisYear < yearEndOfMortgage && thisYear < timeHorizonYears) {
+        while (thisYear < yearEndOfMortgage && thisYear < finalAge) {
             thisYear++; // increase time
             // Apply growth in this year
             if (totalSavings > 0) {
                 totalSavings *= (1 + returnOnSavingsYearly); // Increase savings by yearly ROI
             } else {
-                totalSavings *= (1 + yearlyInterestOnNonMortgageDebt); // consider adding debt interest rate
+                totalSavings *= (1 + yearlyInterestOnNonMortgageDebt); // Decrease savings by yearly debt interest
             }
             housePrice *= (1 + housePriceGrowthYearly);
             yearlyNetSalary *= (1 + salaryGrowthYearly);
             yearlyExpensesExceptRent *= (1 + yearlyExpensesIncreasePercent);
+            // Check if already retired
+            if (thisYear > retirementAgeYears) {
+                yearlyNetSalary = 0;
+            } 
             // Mortgage balance
             const interestPaidOnMortgageThisYear = mortgageDebtOutstanding * yearlyInterestRate;
             const incrementInEquityThisYear = yearlyMortgagePayment - interestPaidOnMortgageThisYear;
@@ -267,34 +286,50 @@ function runSimulation(parameters, initialConditions, timeHorizonYears, yearHous
             totalSavings += (yearlyNetSalary - yearlyMortgagePayment - yearlyExpensesExceptRent);
             // Pass value to state variable for this year
             savingsTimeseries.push(totalSavings);
+            totalNetWorthTimeseries.push(totalSavings + housePrice - mortgageDebtOutstanding);
             housingMonthlyCostTimeseries.push(yearlyMortgagePayment / 12);
         }
 
         // Post-mortgage period begins
-        while (thisYear < timeHorizonYears) {
+        while (thisYear < finalAge) {
             thisYear++; // increase time
             // Apply growth in this year
             if (totalSavings > 0) {
                 totalSavings *= (1 + returnOnSavingsYearly); // Increase savings by yearly ROI
             } else {
-                totalSavings *= (1 + yearlyInterestOnNonMortgageDebt); // consider adding debt interest rate
+                totalSavings *= (1 + yearlyInterestOnNonMortgageDebt); // Decrease savings by yearly debt interest
             }
             housePrice *= (1 + housePriceGrowthYearly);
             yearlyNetSalary *= (1 + salaryGrowthYearly);
             yearlyExpensesExceptRent *= (1 + yearlyExpensesIncreasePercent);
+            // Check if already retired
+            if (thisYear > retirementAgeYears) {
+                yearlyNetSalary = 0;
+            } 
             // Savings balance
             totalSavings += (yearlyNetSalary - yearlyExpensesExceptRent);
             // Pass value to state variable for this year
             savingsTimeseries.push(totalSavings);
+            totalNetWorthTimeseries.push(totalSavings + housePrice); 
             housingMonthlyCostTimeseries.push(0);
         }
     }
 
-    // Final net worth
-    const finalNetWorth = houseHasBeenBought ? totalSavings + housePrice - mortgageDebtOutstanding : totalSavings;
+    // Adjust timeseries for inflation
+    for (let i = 0; i < savingsTimeseries.length; i++) {
+        let adjustmentFactor = Math.pow(1 + yearlyInflation, i);
+        savingsTimeseries[i] /= adjustmentFactor;
+        totalNetWorthTimeseries[i] /= adjustmentFactor;
+        housingMonthlyCostTimeseries[i] /= adjustmentFactor;
+    }
+
+    // Compute max inflation-adjusted net worth
+    const maxNetWorth = Math.max(...totalNetWorthTimeseries); // Using the spread operator to find the max value
+
 
     return {
-        FinalNetWorth: finalNetWorth,
+        MaxNetWorth: maxNetWorth,
+        TotalNetWorthTimeseries: totalNetWorthTimeseries, 
         SavingsTimeseries: savingsTimeseries,
         HousingMonthlyCostTimeseries: housingMonthlyCostTimeseries
     };
