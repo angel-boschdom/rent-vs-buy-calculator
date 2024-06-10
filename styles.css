@@ -46,6 +46,11 @@ input[type="range"] {
     display: block;
 }
 
+/* Make label positions relative to avoid tooltip-text being out of screen */
+label {
+    position: relative;
+}
+
 /* Form Styles */
 #form {
     margin-top: 20px;

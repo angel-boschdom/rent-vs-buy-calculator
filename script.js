@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+    // Add tooltips behavior
+    var tooltips = document.querySelectorAll('.tooltip-icon');
+
+    tooltips.forEach(function(tooltip) {
+        var tooltipText = tooltip.nextElementSibling;
+        tooltip.addEventListener('click', function() {
+            tooltipText.classList.toggle('active');
+        });
+    });
     
     // Generate a plot with the default values
     plotResultsBasedOnCurrentInputValues();
