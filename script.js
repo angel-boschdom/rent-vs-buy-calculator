@@ -144,7 +144,7 @@ function plotResults(parameters, initialConditions, ageYears, retirementAgeYears
                 labels: labels,
                 datasets: [
                     {
-                        label: 'Savings (Area)',
+                        label: 'Savings',
                         data: savingsData,
                         borderColor: 'rgb(0, 100, 0, 0.5)',
                         backgroundColor: 'rgba(0, 100, 0, 0.5)',
@@ -152,7 +152,7 @@ function plotResults(parameters, initialConditions, ageYears, retirementAgeYears
                         tension: 0.1
                     },
                     {
-                        label: 'House Equity (Area)',
+                        label: 'Savings + House Equity',
                         data: totalNetWorthData,
                         borderColor: 'rgb(152, 251, 152, 0.5)',
                         backgroundColor: 'rgba(152, 251, 152, 0.5)',
