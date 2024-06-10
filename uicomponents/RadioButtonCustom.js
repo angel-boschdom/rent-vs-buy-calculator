@@ -30,8 +30,11 @@ class RadioButtonCustom {
     addListeners() {
         const radios = this.container.querySelectorAll(`input[name="customradio_${this.container.id}"]`);
         radios.forEach(radio => {
-            radio.addEventListener('change', this.toggleCustomInput.bind(this));
+            radio.addEventListener('change', this.handleRadioChange.bind(this));
         });
+
+        const customInput = this.container.querySelector(`#customInput_${this.container.id} input`);
+        customInput.addEventListener('input', this.handleCustomInputChange.bind(this));
     }
 
     toggleCustomInput() {
@@ -43,15 +46,27 @@ class RadioButtonCustom {
         }
     }
 
+    handleRadioChange(event) {
+        if (event.target.value !== "custom") {
+            this.container.dispatchEvent(new CustomEvent('value-has-been-modified', {
+                detail: { value: event.target.value }
+            }));
+        }
+        this.toggleCustomInput();
+    }
+
+    handleCustomInputChange(event) {
+        this.container.dispatchEvent(new CustomEvent('value-has-been-modified', {
+            detail: { value: event.target.value }
+        }));
+    }
+
     getValue() {
-        // Check if the custom option is selected
         const isCustomSelected = this.container.querySelector(`#radiovalueCustom_${this.container.id}`).checked;
         if (isCustomSelected) {
-            // Return the value from the custom input field
             const customValue = this.container.querySelector(`#customInput_${this.container.id} input`).value.trim();
-            return customValue ? customValue : null; // Return null if the custom input is empty
+            return customValue ? customValue : null;
         } else {
-            // Return the value of the selected radio button
             const selectedRadio = this.container.querySelector(`input[name="customradio_${this.container.id}"]:checked`);
             return selectedRadio ? selectedRadio.value : null;
         }

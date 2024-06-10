@@ -3,36 +3,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // Generate a plot with the default values
     plotResultsBasedOnCurrentInputValues();
 
-    // Add slider inputs callback
+    // Add slider inputs callback (except for the purchaseAge slider, which has a different callback)
     const sliders = document.querySelectorAll('.slider');
     sliders.forEach(slider => {
-        slider.addEventListener('input', function() {
-            const valueSpan = document.getElementById(slider.id + 'Value');
-            valueSpan.textContent = slider.value;
-            plotResultsBasedOnCurrentInputValues();
-            // Don´t scroll into timeseriesChart view because sliders can change continuosly and it is bad UX
-        });
+        if (slider.id !== "purchaseAge") { // Fix: use !== for "not equal to"
+            slider.addEventListener('input', function() {
+                const valueSpan = document.getElementById(slider.id + 'Value');
+                if (valueSpan) {
+                    valueSpan.textContent = slider.value;
+                }
+                plotResultsBasedOnCurrentInputValues();
+            });
+        }
     });
 
     // Add radio button groups callback
-   const radioButtonsCustom = document.querySelectorAll('.radio-button-custom');
-   radioButtonsCustom.forEach(radioButton => {
-       radioButton.addEventListener('change', function() {
+    const radioButtonsCustom = document.querySelectorAll('.radio-button-custom');
+    radioButtonsCustom.forEach(radioButton => {
+        radioButton.addEventListener('value-has-been-modified', function() {
             plotResultsBasedOnCurrentInputValues();
-            scrollIntoTimeseriesChartView();
-       });
-   });
-
-    // Add "Calculate" button click callback
-    const calculateButton = document.getElementById('plotResults');
-    calculateButton.addEventListener('click', function() {
-        plotResultsBasedOnCurrentInputValues();
-        scrollIntoTimeseriesChartView();
+        });
     });
-
-    // Scroll into view timeseriesChart to focus user attention on the chart
-    scrollIntoTimeseriesChartView();
-
 });
 
 let timeseriesChart = null; // This variable will hold the timeseries chart instance
@@ -97,55 +88,50 @@ function plotResultsBasedOnCurrentInputValues() {
     plotResults(parameters, initialConditions, ageYears, retirementAgeYears);
 }
 
-
+/*
 function scrollIntoTimeseriesChartView() {
     // Scroll into timeseriesChart to focus user attention into it
     const chartElement = document.getElementById('timeseriesChart');
     chartElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
+*/
 
 function plotResults(parameters, initialConditions, ageYears, retirementAgeYears) {
      
     // Timeseries slider and chart
-    document.getElementById('timeseriesControls').style.display = 'block';
-    document.getElementById('timeseriesChart').style.display = 'block';
-    const purchaseTimeSlider = document.getElementById('purchaseTimeSlider');
-    const purchaseTimeValue = document.getElementById('purchaseTimeValue');
-    purchaseTimeSlider.min = ageYears; // Update the slider's min value to ageYears
-    purchaseTimeValue.textContent = purchaseTimeSlider.value; // Set the initial slider value text
-
-    // Find optimal age to buy
-    const optimalTimeToBuy = findOptimalAgeHouseIsBought(parameters, initialConditions, ageYears, retirementAgeYears);
-    const maxNetWorthPossible = computeMaxNetWorth(parameters, initialConditions, ageYears, retirementAgeYears, optimalTimeToBuy);
+    const purchaseAgeSlider = document.getElementById('purchaseAge');
+    const purchaseAgeValue = document.getElementById('purchaseAgeValue');
+    purchaseAgeSlider.min = ageYears; // Update the slider's min value to ageYears
     
+    // Find optimal age to buy
+    const optimalAgeToBuy = findOptimalAgeHouseIsBought(parameters, initialConditions, ageYears, retirementAgeYears);
+    const maxNetWorthPossible = computeMaxNetWorth(parameters, initialConditions, ageYears, retirementAgeYears, optimalAgeToBuy);
+    
+    // Update resultsSummaryHeadline
+    const optimalYearsWaitBuyHouse = document.getElementById('optimalYearsWaitBuyHouse');  
+    const ageYearsValue = parseInt(document.getElementById('ageYears').value);  
+    const yearsWaitValue = optimalAgeToBuy - ageYearsValue;
+    optimalYearsWaitBuyHouse.textContent = yearsWaitValue;
+
     // Set initial timeseries slider value equal to optimal age to buy
-    purchaseTimeSlider.value = optimalTimeToBuy;
+    purchaseAgeSlider.value = optimalAgeToBuy;
+    purchaseAgeValue.textContent = optimalAgeToBuy;
+
     // Trigger input event to update the textContent and other listeners
-    purchaseTimeSlider.dispatchEvent(new Event('input'));
+    purchaseAgeSlider.dispatchEvent(new Event('input'));
     
     // Initial plot of the timeseries chart
-    updateTimeseriesChart(parameters, initialConditions, ageYears, retirementAgeYears, purchaseTimeSlider.value);
+    updateTimeseriesChart(parameters, initialConditions, ageYears, retirementAgeYears, purchaseAgeSlider.value);
 
-    // Event listener for the timeseries dropdown and slider
-    document.getElementById('timeseriesSelect').addEventListener('change', function() {
-        updateTimeseriesChart(parameters, initialConditions, ageYears, retirementAgeYears, purchaseTimeSlider.value);
-    });
-    purchaseTimeSlider.oninput = function() {
-        purchaseTimeValue.textContent = this.value;
+    purchaseAgeSlider.oninput = function() {
+        purchaseAgeValue.textContent = this.value;
         updateTimeseriesChart(parameters, initialConditions, ageYears, retirementAgeYears, this.value);
     };
 
     function updateTimeseriesChart(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought) {
         const ctxTimeseries = document.getElementById('timeseriesChart').getContext('2d');
-        const selectedTimeseries = document.getElementById('timeseriesSelect').value;
-        let savingsData, totalNetWorthData;
-        if (selectedTimeseries === 'savings') {
-            savingsData = computeSavingsTimeseries(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought);
-            totalNetWorthData = computeTotalNetWorthTimeseries(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought);
-        } else {
-            console.error('Selected timeseries not supported for dual-chart display.');
-            return;
-        }
+        const savingsData = computeSavingsTimeseries(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought);
+        const totalNetWorthData = computeTotalNetWorthTimeseries(parameters, initialConditions, ageYears, retirementAgeYears, ageHouseIsBought);
         const labels = Array.from({length: savingsData.length}, (_, i) => i + ageYears);
     
         if (timeseriesChart) {
@@ -176,6 +162,7 @@ function plotResults(parameters, initialConditions, ageYears, retirementAgeYears
                 ]
             },
             options: {
+                aspectRatio: 1.7, // width/height
                 animation: {
                     duration: 0 // Remove animation
                 },

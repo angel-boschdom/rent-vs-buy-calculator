@@ -8,87 +8,82 @@
 </head>
 <body>
     <div class="container">
-        <h1>Optimal Time to Buy a House</h1>
-        <p>You are renting now, and you have some savings. Would you be better off buying a house in the long term, or keep renting instead? How long should you wait before buying the house? This calculator helps you answer this question.</p>
-        <h2>How to Use This Calculator</h2>
-        <p>Fill the form below, and click "Calculate".</p>
-        
-        <div id="form">
-
-            <h3>House and Mortgage</h3>
-
-            <label for="housePrice">House Price (GBP): <span id="housePriceValue">325000</span></label>
+        <h1>Calculate Optimal Time to Buy a House</h1>
+        <p>You are renting now, and you have some savings. Should you buy a house, or keep renting? How does this affect your retirement goals? This calculator clarifies this.</p>
+        <div id="timeseriesControls">
+            <label for="housePrice">House price: <span id="housePriceValue">325000</span></label>
             <input type="range" id="housePrice" min="50000" max="1500000" value="325000" step="10000" class="slider">
 
-            <label for="mortgageDurationYears">Mortgage Duration (Years): </label>
+            <label for="purchaseAge">Age at which house is purchased: <span id="purchaseAgeValue">0</span> years old</label>
+            <input type="range" id="purchaseAge" min="0" max="100" value="0" step="1" class="slider">
+        </div>  
+        <div id="resultsSummaryHeadline">
+            <h4>Based on the parameters specified, you should</h4>
+            <h3>wait <span id="optimalYearsWaitBuyHouse">0</span> years to buy a house,</h3>
+            <h4>as this would maximize your future net worth.</h4>
+        </div> 
+        <canvas id="timeseriesChart"></canvas>
+        <div id="form">
+            <h2>Parameters</h2>
+
+            <h3>Retirement goals</h3>
+
+            <label for="retirementAgeYears">Retirement age (years): <span id="retirementAgeYearsValue">65</span></label>
+            <input type="range" id="retirementAgeYears" min="25" max="95" value="65" step="1" class="slider">
+
+            <label for="ageYears">Age now (years): <span id="ageYearsValue">30</span></label>
+            <input type="range" id="ageYears" min="15" max="90" value="30" step="1" class="slider">
+            
+            <h3>Mortgage</h3>
+
+            <label for="mortgageDurationYears">Mortgage duration (years): </label>
             <div class="radio-button-custom" id="mortgageDurationYearsRadio"></div>
             
-            <label for="mortgageInterestRateYearly">Mortgage Interest Rate Yearly (%): </label>
+            <label for="mortgageInterestRateYearly">Mortgage interest rate yearly (%): </label>
             <div class="radio-button-custom" id="mortgageInterestRateYearlyRadio"></div>
  
-            <label for="downPaymentPercent">Down Payment Percent (%): </label>
+            <label for="downPaymentPercent">Down payment percent (%): </label>
             <div class="radio-button-custom" id="downPaymentPercentRadio"></div>
 
-            <h3>Current Personal Finances</h3>
+            <h3>Current personal finances</h3>
 
             <label for="savings">Savings (GBP): <span id="savingsValue">34000</span></label>
             <input type="range" id="savings" min="0" max="500000" value="34000" step="2000" class="slider">
 
-            <label for="monthlyRent">Monthly Rent (GBP): <span id="monthlyRentValue">1200</span></label>
+            <label for="monthlyRent">Monthly rent (GBP): <span id="monthlyRentValue">1200</span></label>
             <input type="range" id="monthlyRent" min="0" max="4000" value="1200" step="20" class="slider">
 
-            <label for="monthlyExpensesExceptRent">Monthly Expenses Except Rent (GBP): <span id="monthlyExpensesExceptRentValue">1000</span></label>
+            <label for="monthlyExpensesExceptRent">Monthly expenses except rent (GBP): <span id="monthlyExpensesExceptRentValue">1000</span></label>
             <input type="range" id="monthlyExpensesExceptRent" min="0" max="4000" value="1000" step="20" class="slider">
 
-            <label for="monthlyNetSalary">Monthly Net Salary (GBP): <span id="monthlyNetSalaryValue">2600</span></label>
+            <label for="monthlyNetSalary">Monthly net salary (GBP): <span id="monthlyNetSalaryValue">2600</span></label>
             <input type="range" id="monthlyNetSalary" min="900" max="9000" value="2600" step="50" class="slider">
 
-            <h3>Rates of Change</h3>
+            <h3>Future rates of change</h3>
  
-            <label for="yearlyReturnOnSavings">Yearly Return On Savings (%): </label>
+            <label for="yearlyReturnOnSavings">Yearly return on savings (%): </label>
             <div class="radio-button-custom" id="yearlyReturnOnSavingsRadio"></div>
  
-            <label for="yearlyNetSalaryGrowth">Yearly Net Salary Growth (%): </label>
+            <label for="yearlyNetSalaryGrowth">Yearly net salary growth (%): </label>
             <div class="radio-button-custom" id="yearlyNetSalaryGrowthRadio"></div>
 
-            <label for="yearlyHousePriceGrowth">Yearly House Price Growth (%): </label>
+            <label for="yearlyHousePriceGrowth">Yearly house price growth (%): </label>
             <div class="radio-button-custom" id="yearlyHousePriceGrowthRadio"></div>
 
-            <label for="yearlyRentIncrease">Yearly Rent Increase (%): </label>
+            <label for="yearlyRentIncrease">Yearly rent increase (%): </label>
             <div class="radio-button-custom" id="yearlyRentIncreaseRadio"></div>
 
-            <label for="yearlyExpensesIncrease">Yearly Expenses Increase (%) Except Rent: </label>
+            <label for="yearlyExpensesIncrease">Yearly expenses increase (%) except rent: </label>
             <div class="radio-button-custom" id="yearlyExpensesIncreaseRadio"></div>
  
-            <label for="yearlyInterestOnDebt">Yearly Interest On Non-Mortgage Debt (%): </label>
+            <label for="yearlyInterestOnDebt">Yearly interest on non-mortgage debt (%): </label>
             <div class="radio-button-custom" id="yearlyInterestOnDebtRadio"></div>
 
-            <h3>Retirement Goals</h3>
+            <h3>Inflation adjustment</h3>
 
-            <label for="ageYears">Age Now (Years): <span id="ageYearsValue">30</span></label>
-            <input type="range" id="ageYears" min="15" max="90" value="30" step="1" class="slider">
-
-            <label for="retirementAgeYears">Retirement Age (Years): <span id="retirementAgeYearsValue">65</span></label>
-            <input type="range" id="retirementAgeYears" min="25" max="95" value="65" step="1" class="slider">
-
-            <h3>Inflation Adjustment</h3>
-
-            <label for="yearlyInflation">Yearly Inflation Rate (%): </label>
+            <label for="yearlyInflation">Yearly inflation rate (%): </label>
             <div class="radio-button-custom" id="yearlyInflationRadio"></div>
-
-            <button id="plotResults">Calculate</button>
         </div>
-        <div id="timeseriesControls" style="display:none;">
-            <label for="timeseriesSelect">Select timeseries to plot:</label>
-            <select id="timeseriesSelect">
-                <option value="savings">Savings + House Equity</option>
-                <option value="housingCosts">Housing costs (monthly)</option>
-            </select>
-            <label for="purchaseTimeSlider">Age at which house is purchased: </label>
-            <input type="range" id="purchaseTimeSlider" min="0" max="100" value="0" step="1" class="slider">
-            <span id="purchaseTimeValue">0</span> Years
-        </div>
-        <canvas id="timeseriesChart" style="display:none;"></canvas>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/rent-vs-buy-calculator/script.js"></script>
