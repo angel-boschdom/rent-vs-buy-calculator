@@ -16,13 +16,15 @@
 
             <label for="purchaseAge">Age at which you buy the house: <span id="purchaseAgeValue">0</span> years old</label>
             <input type="range" id="purchaseAge" min="0" max="100" value="0" step="1" class="slider">
-        </div>  
-        <div id="resultsSummaryHeadline">
-            <h4>Based on the parameters specified, you should</h4>
-            <h3>wait <span id="optimalYearsWaitBuyHouse">0</span> years to buy the house</h3>
-            <h4>to maximize your future net worth.</h4>
-        </div> 
-        <canvas id="timeseriesChart"></canvas>
+        </div>
+        <div class="sticky-container">
+            <div id="resultsSummaryHeadline">
+                <h4>Based on the parameters specified, you should</h4>
+                <h3>wait <span id="optimalYearsWaitBuyHouse">0</span> years to buy the house</h3>
+                <h4>to maximize your future net worth.</h4>
+            </div> 
+            <canvas id="timeseriesChart"></canvas>
+        </div>
         <div id="form">
             <h2>Parameters</h2>
 

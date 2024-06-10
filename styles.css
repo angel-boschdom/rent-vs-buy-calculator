@@ -26,6 +26,15 @@ p {
     margin-bottom: 1em;
 }
 
+/* Make sticky-container sticky so it is visible even when scrolling down*/
+.sticky-container {
+    position: -webkit-sticky; /* For Safari */
+    position: sticky;
+    top: 0; /* Adjust this value as needed */
+    z-index: 10; /* Ensure it sits above other content */
+    background: white; /* Provide a background to ensure content is readable */
+}
+
 /* Results summary headline styles */
 #resultsSummaryHeadline h3 {
     color: #2fa033;
