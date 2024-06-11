@@ -6,7 +6,6 @@
     <title>Calculate Optimal Time to Buy a House</title>
     <link rel="stylesheet" href="/rent-vs-buy-calculator/styles.css">
     <link rel="stylesheet" href="/rent-vs-buy-calculator/uicomponents/tooltip.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -14,13 +13,13 @@
         <p>You are renting now, and you have some savings. Should you buy a house, or keep renting? How does this affect your retirement goals? This calculator clarifies this.</p>
         <div id="timeseriesControls">
             <label for="housePrice">House price: <span id="housePriceValue">325000</span>
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">Specify the price of the house you are considering.</div>
             </label>
             <input type="range" id="housePrice" min="50000" max="1500000" value="325000" step="10000" class="slider">
 
             <label for="purchaseAge">Age at which you buy the house: <span id="purchaseAgeValue">0</span> years old
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">Specify the age at which you would purchase the house.</div>
             </label>
             <input type="range" id="purchaseAge" min="0" max="100" value="0" step="1" class="slider">
@@ -39,13 +38,13 @@
             <h3>Retirement goals</h3>
 
             <label for="retirementAgeYears">Retirement age (years): <span id="retirementAgeYearsValue">65</span>
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">The age you plan to retire. After this age, you don't have a monthly salary, and all your expenses are paid from your savings and liquid investments.</div>
             </label>
             <input type="range" id="retirementAgeYears" min="25" max="95" value="65" step="1" class="slider">
 
             <label for="ageYears">Age now (years): <span id="ageYearsValue">30</span>
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">Your current age. Used to calculate the time horizon and how many years you should wait before buying the house.</div>
             </label>
             <input type="range" id="ageYears" min="15" max="90" value="30" step="1" class="slider">
@@ -53,19 +52,19 @@
             <h3>Mortgage</h3>
 
             <label for="mortgageDurationYears">Mortgage duration (years):
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">The total duration of your mortgage in years.</div>
             </label>
             <div class="radio-button-custom" id="mortgageDurationYearsRadio"></div>
             
             <label for="mortgageInterestRateYearly">Mortgage interest rate yearly (%):
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">The average annual interest rate for your mortgage during the entire period. This rate affects your monthly mortgage payments.</div>
             </label>
             <div class="radio-button-custom" id="mortgageInterestRateYearlyRadio"></div>
  
             <label for="downPaymentPercent">Down payment percent (%):
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">The percentage of the house price that you pay upfront. You pay this with your savings and liquid investments when you buy the house. If you don't have enough savings, the tool assumes you borrow the difference at the 'Yearly interest on non-mortgage debt' rate.</div>
             </label>
             <div class="radio-button-custom" id="downPaymentPercentRadio"></div>
@@ -73,25 +72,25 @@
             <h3>Current personal finances</h3>
 
             <label for="savings">Savings and liquid investments: <span id="savingsValue">34000</span>
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">The total amount of your current savings and liquid investments. You use this to pay the downpayment of the house when you buy it.</div>
             </label>
             <input type="range" id="savings" min="0" max="500000" value="34000" step="2000" class="slider">
 
             <label for="monthlyRent">Monthly rent: <span id="monthlyRentValue">1200</span>
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">The amount you currently pay for rent each month. This helps in comparing the cost of renting versus buying.</div>
             </label>
             <input type="range" id="monthlyRent" min="0" max="4000" value="1200" step="20" class="slider">
 
             <label for="monthlyExpensesExceptRent">Monthly expenses except rent: <span id="monthlyExpensesExceptRentValue">1000</span>
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">Your monthly expenses excluding rent. This includes bills, groceries, and other living expenses.</div>
             </label>
             <input type="range" id="monthlyExpensesExceptRent" min="0" max="4000" value="1000" step="20" class="slider">
 
             <label for="monthlyNetSalary">Monthly net salary: <span id="monthlyNetSalaryValue">2600</span>
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">Your take-home pay each month after taxes and other deductions. If your expenses are lower than your salary, the difference goes into the savings and liquid investments account. If your expenses are higher than your salary and you have no savings, the tool assumes you borrow money to pay them, at the 'Yearly interest on non-mortgage debt' rate.</div>
             </label>
             <input type="range" id="monthlyNetSalary" min="900" max="9000" value="2600" step="50" class="slider">
@@ -99,37 +98,37 @@
             <h3>Future rates of change</h3>
  
             <label for="yearlyReturnOnSavings">Yearly return on savings or liquid investments (%):
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">The expected annual return rate on your savings and investments. If you have different types of investments, specify the weighted average return you expect in total.</div>
             </label>
             <div class="radio-button-custom" id="yearlyReturnOnSavingsRadio"></div>
  
             <label for="yearlyNetSalaryGrowth">Yearly net salary growth (%):
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">The annual percentage increase in your net salary.</div>
             </label>
             <div class="radio-button-custom" id="yearlyNetSalaryGrowthRadio"></div>
 
             <label for="yearlyHousePriceGrowth">Yearly house price growth (%):
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">The expected annual growth rate of house prices. This is crucial for understanding potential home equity gains or losses, and runaway price if you haven't bought.</div>
             </label>
             <div class="radio-button-custom" id="yearlyHousePriceGrowthRadio"></div>
 
             <label for="yearlyRentIncrease">Yearly rent increase (%):
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">The expected annual increase in rent. This helps in comparing the long-term costs of renting versus buying.</div>
             </label>
             <div class="radio-button-custom" id="yearlyRentIncreaseRadio"></div>
 
             <label for="yearlyExpensesIncrease">Yearly expenses increase (%) except rent:
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">The expected annual increase in your living expenses, excluding rent. This impacts your future savings.</div>
             </label>
             <div class="radio-button-custom" id="yearlyExpensesIncreaseRadio"></div>
  
             <label for="yearlyInterestOnDebt">Yearly interest on non-mortgage debt (%):
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">The annual interest rate on any debt you have outside of a mortgage.</div>
             </label>
             <div class="radio-button-custom" id="yearlyInterestOnDebtRadio"></div>
@@ -137,7 +136,7 @@
             <h3>Inflation adjustment</h3>
 
             <label for="yearlyInflation">Yearly inflation rate (%):
-                <span class="tooltip-icon"><i class="fas fa-info"></i></span>
+                <span class="tooltip-icon">?</span>
                 <div class="tooltip-text">The expected annual inflation rate. This is used to display time-adjusted monetary value at present day in the charts, instead of nominal value.</div>
             </label>
             <div class="radio-button-custom" id="yearlyInflationRadio"></div>
@@ -146,5 +145,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/rent-vs-buy-calculator/script.js"></script>
     <script src="/rent-vs-buy-calculator/uicomponents/RadioButtonCustom.js"></script>
+    <script src="/rent-vs-buy-calculator/uicomponents/tooltip.js"></script>
 </body>
 </html>
