@@ -69,6 +69,14 @@
             </label>
             <div class="radio-button-custom" id="downPaymentPercentRadio"></div>
 
+            <h3>House Ownership Costs</h3>
+
+            <label for="serviceChargeYearly">Service charge per year: <span id="serviceChargeYearlyValue">2200</span>
+                <span class="tooltip-icon">?</span>
+                <div class="tooltip-text">Specify the yearly service charge associated with the house or flat you would purchase. Service charge typically covers maintenance costs, building insurance, utility use common to all neighbours, etc. Service charge is assumed to grow yearly at the value specified in the Yearly inflation rate parameter.</div>
+            </label>
+            <input type="range" id="serviceChargeYearly" min="0" max="7000" value="2200" step="25" class="slider">
+
             <h3>Current personal finances</h3>
 
             <label for="savings">Savings and liquid investments: <span id="savingsValue">34000</span>

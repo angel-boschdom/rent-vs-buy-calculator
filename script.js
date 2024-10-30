@@ -63,6 +63,7 @@ function plotResultsBasedOnCurrentInputValues() {
     const monthlyRent = parseFloat(document.getElementById('monthlyRent').value);
     const monthlyNetSalary = parseFloat(document.getElementById('monthlyNetSalary').value);
     const monthlyExpensesExceptRent = parseFloat(document.getElementById('monthlyExpensesExceptRent').value);
+    const serviceChargeYearly = parseFloat(document.getElementById('serviceChargeYearly').value);
 
     const parameters = {
         MortgageDurationYears: parseInt(mortgageDurationYearsRadio.getValue()),
@@ -82,7 +83,8 @@ function plotResultsBasedOnCurrentInputValues() {
         Savings: savings,
         MonthlyRent: monthlyRent,
         MonthlyNetSalary: monthlyNetSalary,
-        MonthlyExpensesExceptRent: monthlyExpensesExceptRent
+        MonthlyExpensesExceptRent: monthlyExpensesExceptRent,
+        ServiceChargeYearly: serviceChargeYearly
     };
 
     const ageYears = parseInt(document.getElementById('ageYears').value);
@@ -242,6 +244,7 @@ function runSimulation(parameters, initialConditions, ageYears, retirementAgeYea
     let yearlyRent = initialConditions.MonthlyRent * 12;
     let yearlyNetSalary = initialConditions.MonthlyNetSalary * 12;
     let yearlyExpensesExceptRent = initialConditions.MonthlyExpensesExceptRent * 12;
+    let serviceChargeYearly = initialConditions.ServiceChargeYearly;
 
     // Set final age (time horizon)
     let finalAge = 100;
@@ -307,6 +310,7 @@ function runSimulation(parameters, initialConditions, ageYears, retirementAgeYea
             housePrice *= (1 + housePriceGrowthYearly);
             yearlyNetSalary *= (1 + salaryGrowthYearly);
             yearlyExpensesExceptRent *= (1 + yearlyExpensesIncreasePercent);
+            serviceChargeYearly *= (1 + yearlyInflation); // Increase service charge with inflation
             // Check if already retired
             if (thisYear > retirementAgeYears) {
                 yearlyNetSalary = 0;
@@ -316,7 +320,7 @@ function runSimulation(parameters, initialConditions, ageYears, retirementAgeYea
             const incrementInEquityThisYear = yearlyMortgagePayment - interestPaidOnMortgageThisYear;
             mortgageDebtOutstanding -= incrementInEquityThisYear;
             // Savings balance
-            totalSavings += (yearlyNetSalary - yearlyMortgagePayment - yearlyExpensesExceptRent);
+            totalSavings += (yearlyNetSalary - yearlyMortgagePayment - yearlyExpensesExceptRent - serviceChargeYearly);
             // Pass value to state variable for this year
             savingsTimeseries.push(totalSavings);
             totalNetWorthTimeseries.push(totalSavings + housePrice - mortgageDebtOutstanding);
