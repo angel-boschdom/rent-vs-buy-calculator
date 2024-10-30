@@ -339,12 +339,13 @@ function runSimulation(parameters, initialConditions, ageYears, retirementAgeYea
             housePrice *= (1 + housePriceGrowthYearly);
             yearlyNetSalary *= (1 + salaryGrowthYearly);
             yearlyExpensesExceptRent *= (1 + yearlyExpensesIncreasePercent);
+            serviceChargeYearly *= (1 + yearlyInflation); // Increase service charge with inflation
             // Check if already retired
             if (thisYear > retirementAgeYears) {
                 yearlyNetSalary = 0;
             } 
             // Savings balance
-            totalSavings += (yearlyNetSalary - yearlyExpensesExceptRent);
+            totalSavings += (yearlyNetSalary - yearlyExpensesExceptRent - serviceChargeYearly);
             // Pass value to state variable for this year
             savingsTimeseries.push(totalSavings);
             totalNetWorthTimeseries.push(totalSavings + housePrice); 
