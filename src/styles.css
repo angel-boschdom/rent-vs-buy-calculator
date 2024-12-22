@@ -1,0 +1,189 @@
+/* file: /src/styles.css */
+
+/* === Global and Layout Styles === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  body {
+    background-color: #f5f5f5;
+    color: #333;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Center text */
+  }
+  h1, h2, h3, h4 {
+    color: #333;
+  }
+  p {
+    margin-bottom: 1em;
+  }
+  
+  /* Make sticky-container sticky */
+  .sticky-container {
+    position: -webkit-sticky; /* For Safari */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
+  }
+  
+  #resultsSummaryHeadline h3 {
+    color: #2fa033;
+  }
+  
+  label,
+  input[type="range"] {
+    display: block;
+  }
+  label {
+    position: relative;
+  }
+  
+  /* === Slider Styles === */
+  .slider {
+    appearance: none;
+    -webkit-appearance: none;
+    width: calc(100% - 30px);
+    margin: 10px auto;
+    height: 25px;
+    border-radius: 5px;
+    background: #ddd;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .2s;
+  }
+  .slider:hover {
+    opacity: 1;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+  }
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+  }
+  
+  /* === Custom Radio Button Styles === */
+  .toggle {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .toggle input[type="radio"] {
+    display: none;
+  }
+  .toggle label {
+    background-color: #e7e7e7;
+    color: #333;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .toggle input[type="radio"]:checked + label {
+    background-color: #4CAF50;
+    color: white;
+  }
+  .custom-input {
+    display: none;
+  }
+  .custom-input input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+    font-size: 16px;
+  }
+  .custom-input input[type="text"]:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+  }
+  
+  /* === Chart Container === */
+  canvas {
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #timeseriesChart {
+    width: 100% !important;
+    margin: auto;
+    display: block;
+  }
+  
+  /* === Tooltip Styles (merged from tooltip.css) === */
+  .tooltip-icon {
+    display: inline-flex;
+    color: rgb(73, 73, 73);
+    background-color: #e6e6e6;
+    border-radius: 50%;
+    padding: 4px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 10px;
+    transition: background-color 0.3s ease;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    position: relative;
+    top: -5px;
+    right: 0px;
+  }
+  .tooltip-icon:hover {
+    background-color: #c5c4c4;
+  }
+  .tooltip-text {
+    visibility: hidden;
+    opacity: 0;
+    color: #fff;
+    background-color: #333;
+    border-radius: 4px;
+    padding: 8px 12px;
+    position: absolute;
+    z-index: 9999;
+    max-width: 220px;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: normal;
+    word-wrap: break-word;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  .tooltip-icon:hover + .tooltip-text,
+  .tooltip-text.active {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  /* === Responsive === */
+  @media (max-width: 768px) {
+    .container {
+      width: 98%;
+    }
+  }
+  
