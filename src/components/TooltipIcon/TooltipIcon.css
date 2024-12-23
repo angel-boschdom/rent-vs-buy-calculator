@@ -15,36 +15,32 @@
   color: white;
   font-size: 12px;
   margin-left: 6px;
-  transition: background-color 0.3s ease;
-}
-
-.tooltip-icon:hover {
-  background-color: #c5c4c4;
 }
 
 .tooltip-text {
   visibility: hidden;
   opacity: 0;
   width: 200px;
-  color: #fff;
   background-color: #333;
+  color: white;
+  text-align: left;
+  padding: 8px;
   border-radius: 4px;
-  padding: 8px 12px;
   position: absolute;
-  z-index: 9999;
-  left: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-left: 8px;
-  
-  white-space: normal;
-  word-wrap: break-word;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 1000;
+  left: -100px;
+  top: 25px;
+  transition: opacity 0.3s;
 }
 
+/* Important: This makes the tooltip visible */
 .tooltip-text.active {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Add hover state as backup */
+.tooltip-container:hover .tooltip-text {
   visibility: visible;
   opacity: 1;
 }

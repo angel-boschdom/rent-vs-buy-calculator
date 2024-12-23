@@ -1,5 +1,4 @@
-// file: /src/components/Slider/Slider.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import TooltipIcon from '../TooltipIcon/TooltipIcon';
 import './Slider.css';
 
@@ -26,8 +25,31 @@ const Slider: React.FC<SliderProps> = ({
   onChangeValue,
   valueSuffix = '',
 }) => {
+  const [isDragging, setIsDragging] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChangeValue(Number(e.target.value));
+    // Only update if using mouse or if actually dragging on touch device
+    if (!e.nativeEvent.type.includes('touch') || isDragging) {
+      onChangeValue(Number(e.target.value));
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault(); // Prevent accidental touches while scrolling
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setIsDragging(true);
+    const input = e.target as HTMLInputElement;
+    const touch = e.touches[0];
+    const rect = input.getBoundingClientRect();
+    const pos = (touch.clientX - rect.left) / rect.width;
+    const newValue = min + pos * (max - min);
+    onChangeValue(Math.min(max, Math.max(min, Math.round(newValue / step) * step)));
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
   };
 
   return (
@@ -45,6 +67,9 @@ const Slider: React.FC<SliderProps> = ({
         value={value}
         className="slider"
         onChange={handleChange}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       />
     </div>
   );
