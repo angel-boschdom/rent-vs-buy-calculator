@@ -27,7 +27,7 @@ const RentVsBuyCalculator: React.FC = () => {
   const [purchaseAgeManuallyChanged, setPurchaseAgeManuallyChanged] = useState(false);
 
   // === STATE FOR "RADIO BUTTON CUSTOM" GROUPS ===
-  const [mortgageDurationYears, setMortgageDurationYears] = useState('25'); 
+  const [mortgageDurationYears, setMortgageDurationYears] = useState('25');
   const [mortgageInterestRateYearly, setMortgageInterestRateYearly] = useState('6.0');
   const [downPaymentPercent, setDownPaymentPercent] = useState('10');
   const [yearlyReturnOnSavings, setYearlyReturnOnSavings] = useState('4');
@@ -86,9 +86,12 @@ const RentVsBuyCalculator: React.FC = () => {
 
     const labels = SavingsTimeseries.map((_, i) => i + ageYears);
 
+    // Destroy old chart instance if any
     if (chartRef.current) {
       chartRef.current.destroy();
     }
+
+    // Create new chart
     const ctx = (document.getElementById('timeseriesChart') as HTMLCanvasElement)?.getContext('2d');
     if (!ctx) return;
 
@@ -174,7 +177,10 @@ const RentVsBuyCalculator: React.FC = () => {
   // === HANDLERS ===
 
   // Helper for handling changes to any param that is *not* purchaseAge
-  const handleNonPurchaseAgeSliderChange = (newValue: number, setter: React.Dispatch<React.SetStateAction<number>>) => {
+  const handleNonPurchaseAgeSliderChange = (
+    newValue: number,
+    setter: React.Dispatch<React.SetStateAction<number>>
+  ) => {
     setPurchaseAgeManuallyChanged(false);
     setter(newValue);
   };
@@ -186,51 +192,54 @@ const RentVsBuyCalculator: React.FC = () => {
   };
 
   return (
-    <div className="rent-buy-calculator-container">
-      <h1>Calculate Optimal Time to Buy a House</h1>
-      <p>
-        You are renting now, and you have some savings. Should you buy a house, or keep renting?
-        How does this affect your retirement goals? This calculator clarifies this.
-      </p>
+    <div className="split-layout">
+      {/* Left column: Basic info, timeseries controls, and chart */}
+      <div className="left-panel">
+        <h1>Calculate Optimal Time to Buy a House</h1>
+        <p>
+          You are renting now, and you have some savings. Should you buy a house, or keep renting?
+          How does this affect your retirement goals? This calculator clarifies this.
+        </p>
 
-      <div id="timeseriesControls">
-        <Slider
-          id="housePrice"
-          label="House price"
-          tooltipText="Specify the price of the house you are considering."
-          min={50000}
-          max={1500000}
-          step={10000}
-          value={housePrice}
-          onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setHousePrice)}
-        />
+        <div id="timeseriesControls">
+          <Slider
+            id="housePrice"
+            label="House price"
+            tooltipText="Specify the price of the house you are considering."
+            min={50000}
+            max={1500000}
+            step={10000}
+            value={housePrice}
+            onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setHousePrice)}
+          />
 
-        <Slider
-          id="purchaseAge"
-          label="Age at which you buy the house"
-          tooltipText="Specify the age at which you would purchase the house."
-          min={ageYears} // can't buy before your current age
-          max={100}
-          step={1}
-          value={purchaseAge}
-          onChangeValue={handlePurchaseAgeChange}
-          valueSuffix=" years old"
-        />
-      </div>
-
-      <div className="sticky-container">
-        <div id="resultsSummaryHeadline">
-          <h4>Based on the parameters specified, you should</h4>
-          <h3>
-            wait <span id="optimalYearsWaitBuyHouse">0</span> years to buy the house
-          </h3>
-          <h4>to maximize your future net worth.</h4>
+          <Slider
+            id="purchaseAge"
+            label="Age at which you buy the house"
+            tooltipText="Specify the age at which you would purchase the house."
+            min={ageYears} // can't buy before your current age
+            max={100}
+            step={1}
+            value={purchaseAge}
+            onChangeValue={handlePurchaseAgeChange}
+            valueSuffix=" years old"
+          />
         </div>
-        <canvas id="timeseriesChart"></canvas>
+
+        <div className="sticky-container">
+          <div id="resultsSummaryHeadline">
+            <h4>Based on the parameters specified, you should</h4>
+            <h3>
+              wait <span id="optimalYearsWaitBuyHouse">0</span> years to buy the house
+            </h3>
+            <h4>to maximize your future net worth.</h4>
+          </div>
+          <canvas id="timeseriesChart"></canvas>
+        </div>
       </div>
 
-      {/* Main Form */}
-      <div id="form">
+      {/* Right column: The main form */}
+      <div className="right-panel" id="form">
         <h2>Parameters</h2>
 
         <h3>Retirement goals</h3>

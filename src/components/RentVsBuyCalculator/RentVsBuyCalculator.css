@@ -1,32 +1,69 @@
 /* file: /src/components/RentVsBuyCalculator/RentVsBuyCalculator.css */
 
-.rent-buy-calculator-container {
-    max-width: 700px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+h1, h2, h3, h4, h5, p {
+  text-align: center;
+  margin: 0 auto; /* Optional: Ensures proper centering with surrounding spacing */
+}
+
+/* Base container – we use flex layout only on wide screens */
+.split-layout {
+  display: block; /* single-column by default (mobile) */
+}
+
+/* The left and right panels on desktop */
+.left-panel,
+.right-panel {
+  /* In mobile, let them stack naturally */
+  width: 100%;
+}
+
+/* On desktop, switch to two columns, each with independent scrolling */
+@media (min-width: 1024px) {
+  .split-layout {
+    display: flex;
+    flex-direction: row;
+    height: 100vh; /* Full viewport height */
+    overflow: hidden; /* Hide any overflow on the container; each panel scrolls independently */
+    margin: 0;
+    padding: 0;
   }
-  
-  .sticky-container {
-    position: sticky;
-    width: 100%;
-    margin: 0 auto; 
-    top: 0;
-    z-index: 10;
-    background: white;
-    padding-bottom: 10px;
+
+  .left-panel,
+  .right-panel {
+    flex: 1;              /* each takes 50% by default */
+    overflow-y: auto;     /* allows independent vertical scrolling */
+    padding: 20px 40px;   /* some extra padding for desktop */
   }
-  
-  #resultsSummaryHeadline h3 {
-    color: #2fa033;
-  }
-  
- /* Force the canvas to occupy the entire width of the sticky container. */
+}
+
+/* Give the left side a light background, right side white background */
+.left-panel {
+  background-color: #f9f9f9;
+}
+.right-panel {
+  background-color: #fff;
+}
+
+/* We no longer want the chart container to be sticky on desktop, so override: */
+.sticky-container {
+  position: static;  /* override 'sticky' */
+  top: auto;
+  margin: 20px 0;   /* normal flow spacing */
+  width: 100%;
+  background: white;
+  z-index: auto;
+  padding-bottom: 10px; /* keep a bit of spacing for the canvas */
+}
+
+/* Headline styling remains the same */
+#resultsSummaryHeadline h3 {
+  color: #2fa033;
+}
+
+/* Force the chart canvas to occupy the container's width */
 #timeseriesChart {
-    width: 100% !important; 
-    height: auto !important; /* Let the height be auto so it’s responsive. */
-    display: block; 
-    margin: 0 auto; 
-  }
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+  margin: 0 auto;
+}

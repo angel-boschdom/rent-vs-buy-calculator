@@ -1,7 +1,14 @@
 /* file: /src/components/RadioButtonCustom/RadioButtonCustom.css */
-.radio-button-custom {
+  .radio-button-custom {
     margin-bottom: 20px;
   }
+
+  .radio-label {
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    text-align: center; /* Ensure text is centered for multi-line labels */
+  }  
   
   .toggle {
     display: flex;
