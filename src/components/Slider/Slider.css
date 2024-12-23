@@ -1,0 +1,50 @@
+/* file: /src/components/Slider/Slider.css */
+
+.slider-container {
+    margin-bottom: 20px;
+    text-align: left; /* so label and value line up in a typical form style */
+  }
+  
+  .slider-container label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .slider-value {
+    font-weight: bold;
+  }
+  .slider-container .slider {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    margin: 10px auto;
+    height: 25px;
+    border-radius: 5px;
+    background: #ddd;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    display: block;
+  }
+  
+  .slider-container .slider:hover {
+    opacity: 1;
+  }
+  
+  .slider-container .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+  }
+  
+  .slider-container .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+  }  

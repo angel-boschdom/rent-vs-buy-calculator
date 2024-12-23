@@ -1,0 +1,32 @@
+/* file: /src/components/RentVsBuyCalculator/RentVsBuyCalculator.css */
+
+.rent-buy-calculator-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sticky-container {
+    position: sticky;
+    width: 100%;
+    margin: 0 auto; 
+    top: 0;
+    z-index: 10;
+    background: white;
+    padding-bottom: 10px;
+  }
+  
+  #resultsSummaryHeadline h3 {
+    color: #2fa033;
+  }
+  
+ /* Force the canvas to occupy the entire width of the sticky container. */
+#timeseriesChart {
+    width: 100% !important; 
+    height: auto !important; /* Let the height be auto so it’s responsive. */
+    display: block; 
+    margin: 0 auto; 
+  }
