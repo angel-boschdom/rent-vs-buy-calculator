@@ -100,9 +100,25 @@
     }
   
     .right-panel {
-      flex: 1;          /* occupy remaining width */
-      overflow-y: auto; /* scrollable right panel */
-      background-color: white;
-      padding: 20px 40px;
+        flex: 1;          /* occupy remaining width */
+        overflow-y: auto; /* scrollable right panel */
+        background-color: white;
+        padding: 20px 40px;
+        
+        /* Add a left border as a visual separator */
+        border-left: 1px solid #ccc;
+        position: relative; /* To position the custom scrollbar absolutely */
     }
+      
+      /* Persistent scrollbar for clarity */
+      .right-panel::-webkit-scrollbar {
+        width: 8px;
+      }
+      .right-panel::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .right-panel::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+      }
   }  
