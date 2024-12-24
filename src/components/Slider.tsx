@@ -1,6 +1,5 @@
 import React from 'react';
-import TooltipIcon from '../TooltipIcon/TooltipIcon';
-import './Slider.css';
+import TooltipIcon from './TooltipIcon';
 
 interface SliderProps {
   id: string;
@@ -11,7 +10,7 @@ interface SliderProps {
   step: number;
   value: number;
   onChangeValue: (newValue: number) => void;
-  valueSuffix?: string; // e.g. " years old"
+  valueSuffix?: string;
 }
 
 const Slider: React.FC<SliderProps> = ({
@@ -30,12 +29,17 @@ const Slider: React.FC<SliderProps> = ({
   };
 
   return (
-    <div className="slider-container">
-      <label htmlFor={id}>
-        {label}: <span className="slider-value">{value}</span>
-        {valueSuffix}{' '}
+    <div className="mb-5 text-center">
+      <label htmlFor={id} className="block mb-1 font-semibold">
+        {label}:{' '}
+        <span className="font-bold">{value}{valueSuffix}</span>
         {tooltipText && <TooltipIcon text={tooltipText} />}
       </label>
+
+      {/* 
+        Tailwind doesn't have direct styling for <input type="range"> 
+        so you can use minimal styling or adopt a custom approach:
+      */}
       <input
         type="range"
         id={id}
@@ -43,8 +47,19 @@ const Slider: React.FC<SliderProps> = ({
         max={max}
         step={step}
         value={value}
-        className="slider"
         onChange={handleChange}
+        className="
+          w-3/4 mt-2 
+          accent-primary
+          cursor-pointer 
+          h-2 rounded-lg 
+          bg-gray-300
+        "
+        style={{ 
+          // Optionally style the thumb inlined:
+          WebkitAppearance: 'none',
+          appearance: 'none',
+        }}
       />
     </div>
   );

@@ -1,6 +1,5 @@
-// file: /src/App.tsx
 import React from 'react';
-import RentVsBuyCalculator from './components/RentVsBuyCalculator/RentVsBuyCalculator';
+import RentVsBuyCalculator from './components/RentVsBuyCalculator';
 
 const App: React.FC = () => {
   return <RentVsBuyCalculator />;
