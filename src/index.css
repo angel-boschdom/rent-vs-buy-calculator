@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 body {
+    overflow-x: hidden; /* Prevent horizontal scroll */
+  }
+  
+body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
     font-size: 14px;

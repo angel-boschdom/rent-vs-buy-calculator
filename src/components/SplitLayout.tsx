@@ -35,20 +35,18 @@ const SplitLayout: React.FC<SplitLayoutProps> = ({ leftTop, leftBottom, right })
   }, [initialOffset]);
 
   return (
-    <div className="block lg:flex lg:h-screen lg:overflow-hidden">
-      {/* Mobile: block layout */}
-      {/* Desktop (min-w-[1024px]): flex layout */}
-      {/* Left panel: On desktop, fixed width 50%, no scroll. */}
-      <div className="w-full lg:w-1/2 lg:flex-shrink-0 lg:overflow-hidden flex flex-col">
-        {/* Top portion */}
+    <div className="block lg:flex lg:h-screen lg:overflow-hidden overflow-x-hidden">
+      {/* Left Panel */}
+      <div className="w-full lg:w-1/2 lg:overflow-y-auto flex flex-col">
+        {/* Top Portion */}
         <div className="p-4 border-b border-gray-300">
           {leftTop}
         </div>
 
-        {/* Placeholder below bottom. On mobile, used for sticky simulation. */}
+        {/* Placeholder for Sticky Bottom on Mobile */}
         <div style={{ height: isFixed ? bottomHeight : 0 }} />
 
-        {/* Bottom portion pinned or static on mobile. On desktop, no special pin needed. */}
+        {/* Bottom Portion */}
         <div
           ref={bottomRef}
           className={`p-4 border-b border-gray-300
@@ -60,7 +58,7 @@ const SplitLayout: React.FC<SplitLayoutProps> = ({ leftTop, leftBottom, right })
         </div>
       </div>
 
-      {/* Right panel: on desktop, scrollable. On mobile, normal flow. */}
+      {/* Right Panel */}
       <div className="w-full lg:flex-1 lg:overflow-y-auto p-4 lg:p-8 border-l border-gray-300">
         {right}
       </div>
