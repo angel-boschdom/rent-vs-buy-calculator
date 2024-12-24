@@ -247,9 +247,9 @@ const RentVsBuyCalculator: React.FC = () => {
         <>
         <canvas id="timeseriesChart"></canvas>
         <div id="resultsSummaryHeadline">
-          <h4>Based on the parameters specified, you should</h4>
+          <h4>Based on the parameters specified below,</h4>
           <h3>
-            wait <span id="optimalYearsWaitBuyHouse">0</span> years to buy the house
+          you should wait <span id="optimalYearsWaitBuyHouse">0</span> years to buy the house
           </h3>
           <h4>to maximize your future net worth.</h4>
         </div>

@@ -1,19 +1,18 @@
-/* file: /src/components/Slider/Slider.css */
-
 .slider-container {
     margin-bottom: 20px;
     text-align: center; 
-  }
+}
   
-  .slider-container label {
+.slider-container label {
     display: block;
     margin-bottom: 5px;
-  }
+}
   
-  .slider-value {
+.slider-value {
     font-weight: bold;
-  }
-  .slider-container .slider {
+}
+  
+.slider-container .slider {
     appearance: none;
     -webkit-appearance: none;
     width: 70%;
@@ -26,13 +25,13 @@
     transition: opacity 0.2s;
     display: block;
     touch-action: none; /* Prevents scrolling while touching the slider */
-  }
+}
   
-  .slider-container .slider:hover {
+.slider-container .slider:hover {
     opacity: 1;
-  }
+}
   
-  .slider-container .slider::-webkit-slider-thumb {
+.slider-container .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 25px;
@@ -40,12 +39,12 @@
     border-radius: 50%;
     background: #4CAF50;
     cursor: pointer;
-  }
+}
   
-  .slider-container .slider::-moz-range-thumb{
+.slider-container .slider::-moz-range-thumb{
     width: 25px;
     height: 25px;
     border-radius: 50%;
     background: #4CAF50;
     cursor: pointer;
-  }
+}
