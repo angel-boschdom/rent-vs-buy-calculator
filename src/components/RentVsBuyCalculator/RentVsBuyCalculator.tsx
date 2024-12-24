@@ -1,6 +1,7 @@
 // file: /src/components/RentVsBuyCalculator/RentVsBuyCalculator.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Chart, registerables } from 'chart.js';
+import SplitLayout from '../SplitLayout/SplitLayout';
 import RadioButtonCustom from '../RadioButtonCustom/RadioButtonCustom';
 import Slider from '../Slider/Slider';
 import { useSimulation } from '../../hooks/useSimulation';
@@ -191,11 +192,13 @@ const RentVsBuyCalculator: React.FC = () => {
     setPurchaseAge(newValue);
   };
 
+
+
   return (
-    <div className="split-layout">
-      {/* Left column: Basic info, timeseries controls, and chart */}
-      <div className="left-panel">
-        <h1>Calculate Optimal Time to Buy a House</h1>
+    <SplitLayout
+      leftTop={
+        <>
+          <h1>Calculate Optimal Time to Buy a House</h1>
         <p>
           You are renting now, and you have some savings. Should you buy a house, or keep renting?
           How does this affect your retirement goals? This calculator clarifies this.
@@ -225,227 +228,231 @@ const RentVsBuyCalculator: React.FC = () => {
             valueSuffix=" years old"
           />
         </div>
+        </>
+      }
 
-        <div className="sticky-container">
-          <div id="resultsSummaryHeadline">
-            <h4>Based on the parameters specified, you should</h4>
-            <h3>
-              wait <span id="optimalYearsWaitBuyHouse">0</span> years to buy the house
-            </h3>
-            <h4>to maximize your future net worth.</h4>
-          </div>
-          <canvas id="timeseriesChart"></canvas>
+      leftBottom={
+        /* This chunk stays sticky on mobile when scrolling */
+        <>
+        <div id="resultsSummaryHeadline">
+          <h4>Based on the parameters specified, you should</h4>
+          <h3>
+            wait <span id="optimalYearsWaitBuyHouse">0</span> years to buy the house
+          </h3>
+          <h4>to maximize your future net worth.</h4>
+        </div><canvas id="timeseriesChart"></canvas>
+        </>
+      }
+
+      /* Right panel content goes here */
+      right={
+        <div id="form">
+          <h2>Parameters</h2>
+          <h3>Retirement goals</h3>
+          <Slider
+            id="retirementAgeYears"
+            label="Retirement age (years)"
+            tooltipText="The age you plan to retire. After this age, you don't have a monthly salary."
+            min={purchaseAge}
+            max={95}
+            step={1}
+            value={retirementAgeYears}
+            onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setRetirementAgeYears)}
+          />
+
+          <Slider
+            id="ageYears"
+            label="Age now (years)"
+            tooltipText="Your current age. Used to calculate the time horizon."
+            min={15}
+            max={90}
+            step={1}
+            value={ageYears}
+            onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setAgeYears)}
+          />
+
+          <h3>Mortgage</h3>
+          <RadioButtonCustom
+            name="mortgageDurationYearsRadio"
+            values={[20, 25, 30]}
+            defaultSelectedIndex={2}
+            onValueChange={(val) => {
+              setPurchaseAgeManuallyChanged(false);
+              setMortgageDurationYears(val);
+            }}
+            label="Mortgage duration (years):"
+            tooltipText="Total duration of your mortgage in years."
+          />
+
+          <RadioButtonCustom
+            name="mortgageInterestRateYearlyRadio"
+            values={[3.0, 4.5, 6.0]}
+            defaultSelectedIndex={3}
+            onValueChange={(val) => {
+              setPurchaseAgeManuallyChanged(false);
+              setMortgageInterestRateYearly(val);
+            }}
+            label="Mortgage interest rate yearly (%):"
+            tooltipText="Average annual interest rate for your mortgage."
+          />
+
+          <RadioButtonCustom
+            name="downPaymentPercentRadio"
+            values={[5, 10, 15]}
+            defaultSelectedIndex={1}
+            onValueChange={(val) => {
+              setPurchaseAgeManuallyChanged(false);
+              setDownPaymentPercent(val);
+            }}
+            label="Down payment percent (%):"
+            tooltipText="Percentage of the house price that you pay upfront."
+          />
+
+          <h3>House Ownership Costs</h3>
+          <Slider
+            id="serviceChargeYearly"
+            label="Service charge per year"
+            tooltipText="Yearly service charge for maintenance, building insurance, etc."
+            min={0}
+            max={7000}
+            step={25}
+            value={serviceChargeYearly}
+            onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setServiceChargeYearly)}
+          />
+
+          <h3>Current personal finances</h3>
+          <Slider
+            id="savings"
+            label="Savings and liquid investments"
+            tooltipText="The total amount of your current savings and liquid investments."
+            min={0}
+            max={500000}
+            step={2000}
+            value={savings}
+            onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setSavings)}
+          />
+
+          <Slider
+            id="monthlyRent"
+            label="Monthly rent"
+            tooltipText="The amount you currently pay for rent each month."
+            min={0}
+            max={4000}
+            step={20}
+            value={monthlyRent}
+            onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setMonthlyRent)}
+          />
+
+          <Slider
+            id="monthlyExpensesExceptRent"
+            label="Monthly expenses except rent"
+            tooltipText="Your monthly expenses excluding rent."
+            min={0}
+            max={4000}
+            step={20}
+            value={monthlyExpensesExceptRent}
+            onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setMonthlyExpensesExceptRent)}
+          />
+
+          <Slider
+            id="monthlyNetSalary"
+            label="Monthly net salary"
+            tooltipText="Your take-home pay each month after taxes."
+            min={900}
+            max={9000}
+            step={50}
+            value={monthlyNetSalary}
+            onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setMonthlyNetSalary)}
+          />
+
+          <h3>Future rates of change</h3>
+          <RadioButtonCustom
+            name="yearlyReturnOnSavingsRadio"
+            values={[2, 4, 7]}
+            defaultSelectedIndex={2}
+            onValueChange={(val) => {
+              setPurchaseAgeManuallyChanged(false);
+              setYearlyReturnOnSavings(val);
+            }}
+            label="Yearly return on savings or liquid investments (%):"
+            tooltipText="The expected annual return rate on your savings/investments."
+          />
+
+          <RadioButtonCustom
+            name="yearlyNetSalaryGrowthRadio"
+            values={[0, 3, 6]}
+            defaultSelectedIndex={3}
+            onValueChange={(val) => {
+              setPurchaseAgeManuallyChanged(false);
+              setYearlyNetSalaryGrowth(val);
+            }}
+            label="Yearly net salary growth (%):"
+            tooltipText="Annual percentage increase in your net salary."
+          />
+
+          <RadioButtonCustom
+            name="yearlyHousePriceGrowthRadio"
+            values={[0, 3, 6]}
+            defaultSelectedIndex={3}
+            onValueChange={(val) => {
+              setPurchaseAgeManuallyChanged(false);
+              setYearlyHousePriceGrowth(val);
+            }}
+            label="Yearly house price growth (%):"
+            tooltipText="Expected annual growth rate of house prices."
+          />
+
+          <RadioButtonCustom
+            name="yearlyRentIncreaseRadio"
+            values={[0, 3, 6]}
+            defaultSelectedIndex={3}
+            onValueChange={(val) => {
+              setPurchaseAgeManuallyChanged(false);
+              setYearlyRentIncrease(val);
+            }}
+            label="Yearly rent increase (%):"
+            tooltipText="Expected annual increase in rent."
+          />
+
+          <RadioButtonCustom
+            name="yearlyExpensesIncreaseRadio"
+            values={[0, 3, 6]}
+            defaultSelectedIndex={3}
+            onValueChange={(val) => {
+              setPurchaseAgeManuallyChanged(false);
+              setYearlyExpensesIncrease(val);
+            }}
+            label="Yearly expenses increase (%) except rent:"
+            tooltipText="Expected annual increase in your living expenses (except rent)."
+          />
+
+          <RadioButtonCustom
+            name="yearlyInterestOnDebtRadio"
+            values={[5, 10, 15]}
+            defaultSelectedIndex={3}
+            onValueChange={(val) => {
+              setPurchaseAgeManuallyChanged(false);
+              setYearlyInterestOnDebt(val);
+            }}
+            label="Yearly interest on non-mortgage debt (%):"
+            tooltipText="Annual interest rate on any debt outside of a mortgage."
+          />
+
+          <h3>Inflation adjustment</h3>
+          <RadioButtonCustom
+            name="yearlyInflationRadio"
+            values={[0, 2, 4]}
+            defaultSelectedIndex={3}
+            onValueChange={(val) => {
+              setPurchaseAgeManuallyChanged(false);
+              setYearlyInflation(val);
+            }}
+            label="Yearly inflation rate (%):"
+            tooltipText="Expected annual inflation rate for adjusting money values."
+          />
         </div>
-      </div>
-
-      {/* Right column: The main form */}
-      <div className="right-panel" id="form">
-        <h2>Parameters</h2>
-
-        <h3>Retirement goals</h3>
-        <Slider
-          id="retirementAgeYears"
-          label="Retirement age (years)"
-          tooltipText="The age you plan to retire. After this age, you don't have a monthly salary."
-          min={purchaseAge}
-          max={95}
-          step={1}
-          value={retirementAgeYears}
-          onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setRetirementAgeYears)}
-        />
-
-        <Slider
-          id="ageYears"
-          label="Age now (years)"
-          tooltipText="Your current age. Used to calculate the time horizon."
-          min={15}
-          max={90}
-          step={1}
-          value={ageYears}
-          onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setAgeYears)}
-        />
-
-        <h3>Mortgage</h3>
-        <RadioButtonCustom
-          name="mortgageDurationYearsRadio"
-          values={[20, 25, 30]}
-          defaultSelectedIndex={2}
-          onValueChange={(val) => {
-            setPurchaseAgeManuallyChanged(false);
-            setMortgageDurationYears(val);
-          }}
-          label="Mortgage duration (years):"
-          tooltipText="Total duration of your mortgage in years."
-        />
-
-        <RadioButtonCustom
-          name="mortgageInterestRateYearlyRadio"
-          values={[3.0, 4.5, 6.0]}
-          defaultSelectedIndex={3}
-          onValueChange={(val) => {
-            setPurchaseAgeManuallyChanged(false);
-            setMortgageInterestRateYearly(val);
-          }}
-          label="Mortgage interest rate yearly (%):"
-          tooltipText="Average annual interest rate for your mortgage."
-        />
-
-        <RadioButtonCustom
-          name="downPaymentPercentRadio"
-          values={[5, 10, 15]}
-          defaultSelectedIndex={1}
-          onValueChange={(val) => {
-            setPurchaseAgeManuallyChanged(false);
-            setDownPaymentPercent(val);
-          }}
-          label="Down payment percent (%):"
-          tooltipText="Percentage of the house price that you pay upfront."
-        />
-
-        <h3>House Ownership Costs</h3>
-        <Slider
-          id="serviceChargeYearly"
-          label="Service charge per year"
-          tooltipText="Yearly service charge for maintenance, building insurance, etc."
-          min={0}
-          max={7000}
-          step={25}
-          value={serviceChargeYearly}
-          onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setServiceChargeYearly)}
-        />
-
-        <h3>Current personal finances</h3>
-        <Slider
-          id="savings"
-          label="Savings and liquid investments"
-          tooltipText="The total amount of your current savings and liquid investments."
-          min={0}
-          max={500000}
-          step={2000}
-          value={savings}
-          onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setSavings)}
-        />
-
-        <Slider
-          id="monthlyRent"
-          label="Monthly rent"
-          tooltipText="The amount you currently pay for rent each month."
-          min={0}
-          max={4000}
-          step={20}
-          value={monthlyRent}
-          onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setMonthlyRent)}
-        />
-
-        <Slider
-          id="monthlyExpensesExceptRent"
-          label="Monthly expenses except rent"
-          tooltipText="Your monthly expenses excluding rent."
-          min={0}
-          max={4000}
-          step={20}
-          value={monthlyExpensesExceptRent}
-          onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setMonthlyExpensesExceptRent)}
-        />
-
-        <Slider
-          id="monthlyNetSalary"
-          label="Monthly net salary"
-          tooltipText="Your take-home pay each month after taxes."
-          min={900}
-          max={9000}
-          step={50}
-          value={monthlyNetSalary}
-          onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setMonthlyNetSalary)}
-        />
-
-        <h3>Future rates of change</h3>
-        <RadioButtonCustom
-          name="yearlyReturnOnSavingsRadio"
-          values={[2, 4, 7]}
-          defaultSelectedIndex={2}
-          onValueChange={(val) => {
-            setPurchaseAgeManuallyChanged(false);
-            setYearlyReturnOnSavings(val);
-          }}
-          label="Yearly return on savings or liquid investments (%):"
-          tooltipText="The expected annual return rate on your savings/investments."
-        />
-
-        <RadioButtonCustom
-          name="yearlyNetSalaryGrowthRadio"
-          values={[0, 3, 6]}
-          defaultSelectedIndex={3}
-          onValueChange={(val) => {
-            setPurchaseAgeManuallyChanged(false);
-            setYearlyNetSalaryGrowth(val);
-          }}
-          label="Yearly net salary growth (%):"
-          tooltipText="Annual percentage increase in your net salary."
-        />
-
-        <RadioButtonCustom
-          name="yearlyHousePriceGrowthRadio"
-          values={[0, 3, 6]}
-          defaultSelectedIndex={3}
-          onValueChange={(val) => {
-            setPurchaseAgeManuallyChanged(false);
-            setYearlyHousePriceGrowth(val);
-          }}
-          label="Yearly house price growth (%):"
-          tooltipText="Expected annual growth rate of house prices."
-        />
-
-        <RadioButtonCustom
-          name="yearlyRentIncreaseRadio"
-          values={[0, 3, 6]}
-          defaultSelectedIndex={3}
-          onValueChange={(val) => {
-            setPurchaseAgeManuallyChanged(false);
-            setYearlyRentIncrease(val);
-          }}
-          label="Yearly rent increase (%):"
-          tooltipText="Expected annual increase in rent."
-        />
-
-        <RadioButtonCustom
-          name="yearlyExpensesIncreaseRadio"
-          values={[0, 3, 6]}
-          defaultSelectedIndex={3}
-          onValueChange={(val) => {
-            setPurchaseAgeManuallyChanged(false);
-            setYearlyExpensesIncrease(val);
-          }}
-          label="Yearly expenses increase (%) except rent:"
-          tooltipText="Expected annual increase in your living expenses (except rent)."
-        />
-
-        <RadioButtonCustom
-          name="yearlyInterestOnDebtRadio"
-          values={[5, 10, 15]}
-          defaultSelectedIndex={3}
-          onValueChange={(val) => {
-            setPurchaseAgeManuallyChanged(false);
-            setYearlyInterestOnDebt(val);
-          }}
-          label="Yearly interest on non-mortgage debt (%):"
-          tooltipText="Annual interest rate on any debt outside of a mortgage."
-        />
-
-        <h3>Inflation adjustment</h3>
-        <RadioButtonCustom
-          name="yearlyInflationRadio"
-          values={[0, 2, 4]}
-          defaultSelectedIndex={3}
-          onValueChange={(val) => {
-            setPurchaseAgeManuallyChanged(false);
-            setYearlyInflation(val);
-          }}
-          label="Yearly inflation rate (%):"
-          tooltipText="Expected annual inflation rate for adjusting money values."
-        />
-      </div>
-    </div>
+      }
+    />
   );
 };
 

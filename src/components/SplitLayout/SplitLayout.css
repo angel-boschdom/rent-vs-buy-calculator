@@ -1,0 +1,81 @@
+/* Base container is one column by default (mobile) */
+.split-layout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto; /* on mobile, let it expand naturally */
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Both panels stack full-width on mobile */
+  .left-panel,
+  .right-panel {
+    width: 100%;
+  }
+  
+  /* Give left panel a light background */
+  .left-panel {
+    background-color: #f9f9f9;
+  }
+  
+  /* Inner sections of the left panel */
+  .left-panel-top,
+  .left-panel-bottom {
+    padding: 1rem;
+  }
+  
+  /*
+    On mobile, the bottom half of the left panel is sticky.
+    Typically you use 'top: 0' to stick it to the top after it scrolls into view;
+  */
+  .left-panel-bottom {
+    position: -webkit-sticky; /* for Safari/iOS */
+    position: sticky;
+    top: 0; /* stick it to the top after it scrolls into view */
+    background: white; /* ensure content is visible */
+    z-index: 10;
+    width: 100%;
+    padding: 1rem;
+  }
+  
+  /* Right panel on mobile is just normal flow, so no special rules needed here. */
+  
+  /* --- DESKTOP --- */
+  @media (min-width: 1024px) {
+    .split-layout {
+      flex-direction: row;
+      height: 100vh; /* We want full viewport height on desktop. */
+      overflow: hidden; /* Hide container overflow to ensure right panel can scroll independently. */
+    }
+  
+    .left-panel {
+      /* Fix the left panel so it does NOT scroll. You can also just “pin” it
+         with sticky if you prefer, but here we show a fully non-scrollable panel. */
+      width: 50%;       
+      flex-shrink: 0;      
+      overflow: hidden;    /* hide overflow so it doesn't scroll */
+      display: flex;
+      flex-direction: column;
+    }
+  
+    /* On desktop, no need for the special sticky for the bottom half, 
+       so override to static positioning. */
+    .left-panel-top,
+    .left-panel-bottom {
+      position: static;
+      padding: 20px 40px;
+    }
+  
+    .right-panel {
+      flex: 1;             /* take the remaining width */
+      overflow-y: auto;    /* scrollable column on the right */
+      background-color: #fff;
+      padding: 20px 40px;
+    }
+
+    .left-panel-bottom {
+      position: static;
+      border-top: none;
+    }
+  }

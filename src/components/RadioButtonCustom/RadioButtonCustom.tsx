@@ -8,8 +8,6 @@ interface RadioButtonCustomProps {
   values: (number | string)[];
   defaultSelectedIndex?: number;
   onValueChange: (value: string) => void;
-
-  // New props for label & tooltip
   label: string;
   tooltipText?: string;
 }
