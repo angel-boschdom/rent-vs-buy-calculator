@@ -1,18 +1,7 @@
-/* file: /src/components/RentVsBuyCalculator/RentVsBuyCalculator.css */
-
 h1, h2, h3, h4, h5, p {
   text-align: center;
-  margin: 0 auto; /* Optional: Ensures proper centering with surrounding spacing */
-}
+  }
 
 #resultsSummaryHeadline h3 {
   color: #2fa033;
-}
-
-/* Force the chart canvas to occupy the container's width */
-#timeseriesChart {
-  width: 100% !important;
-  height: auto !important;
-  display: block;
-  margin: 0 auto;
 }

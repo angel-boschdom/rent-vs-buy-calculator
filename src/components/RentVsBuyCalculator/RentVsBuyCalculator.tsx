@@ -217,6 +217,17 @@ const RentVsBuyCalculator: React.FC = () => {
           />
 
           <Slider
+            id="ageYears"
+            label="Your age now (years)"
+            tooltipText="Your current age. Used to calculate the time horizon."
+            min={15}
+            max={90}
+            step={1}
+            value={ageYears}
+            onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setAgeYears)}
+          />
+
+          <Slider
             id="purchaseAge"
             label="Age at which you buy the house"
             tooltipText="Specify the age at which you would purchase the house."
@@ -234,13 +245,14 @@ const RentVsBuyCalculator: React.FC = () => {
       leftBottom={
         /* This chunk stays sticky on mobile when scrolling */
         <>
+        <canvas id="timeseriesChart"></canvas>
         <div id="resultsSummaryHeadline">
           <h4>Based on the parameters specified, you should</h4>
           <h3>
             wait <span id="optimalYearsWaitBuyHouse">0</span> years to buy the house
           </h3>
           <h4>to maximize your future net worth.</h4>
-        </div><canvas id="timeseriesChart"></canvas>
+        </div>
         </>
       }
 
@@ -258,17 +270,6 @@ const RentVsBuyCalculator: React.FC = () => {
             step={1}
             value={retirementAgeYears}
             onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setRetirementAgeYears)}
-          />
-
-          <Slider
-            id="ageYears"
-            label="Age now (years)"
-            tooltipText="Your current age. Used to calculate the time horizon."
-            min={15}
-            max={90}
-            step={1}
-            value={ageYears}
-            onChangeValue={(val) => handleNonPurchaseAgeSliderChange(val, setAgeYears)}
           />
 
           <h3>Mortgage</h3>
