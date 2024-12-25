@@ -13,7 +13,7 @@ export default function Layout({ children }: LayoutProps) {
       <Navigation />
       <main className={cn(
         "flex-1 w-full",
-        "px-4 py-6 sm:py-8 md:py-12",
+        "px-4 py-1 sm:py-2 md:py-4", // Adjusted padding
         "mx-auto max-w-[90rem]",
         "transition-all duration-300 ease-in-out"
       )}>

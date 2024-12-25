@@ -39,7 +39,7 @@ const SplitLayout: React.FC<SplitLayoutProps> = ({ leftTop, leftBottom, right })
       {/* Left Panel */}
       <div className="w-full lg:w-1/2 lg:overflow-y-auto flex flex-col">
         {/* Top Portion */}
-        <div className="p-4 border-b border-gray-300">
+        <div className="p-4">
           {leftTop}
         </div>
 
@@ -49,7 +49,7 @@ const SplitLayout: React.FC<SplitLayoutProps> = ({ leftTop, leftBottom, right })
         {/* Bottom Portion */}
         <div
           ref={bottomRef}
-          className={`p-4 border-b border-gray-300
+          className={`p-4
             ${isFixed ? 'fixed top-0 left-0 right-0 bg-white z-50' : 'static'}
             lg:static lg:border-none
           `}
