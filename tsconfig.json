@@ -1,4 +1,6 @@
 {
+  "include": ["src"],
+  "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
@@ -7,8 +9,9 @@
     "esModuleInterop": true,
     "jsx": "react",
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "@/*": ["./src/*"],
+    }
   },
-  "include": ["src"],
-  "exclude": ["node_modules"]
 }

@@ -1,9 +1,5 @@
-// file: /src/hooks/useSimulation.ts
 import { useCallback } from 'react';
-import { SimulationParameters, InitialConditions, SimulationResults } from '../types';
-
-// We replicate the same code from script.js. 
-// The difference is that these are in TypeScript, and we expose them for use in App or any other component.
+import { SimulationParameters, InitialConditions, SimulationResults } from '@/types';
 
 export function useSimulation() {
 

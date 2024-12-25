@@ -14,9 +14,18 @@
   },
   "homepage": "https://angel-boschdom.github.io/rent-vs-buy-calculator/",
   "dependencies": {
+    "@radix-ui/react-navigation-menu": "^1.2.3",
+    "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-toast": "^1.2.4",
+    "@tanstack/react-query": "^5.62.10",
     "chart.js": "^4.4.7",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.469.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.6.0",
+    "wouter": "^3.3.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

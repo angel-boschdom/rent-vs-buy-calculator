@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import TooltipIcon from './TooltipIcon';
+import TooltipIcon from '@/components/TooltipIcon';
 
 interface RadioButtonCustomProps {
   name: string;

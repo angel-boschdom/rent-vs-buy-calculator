@@ -53,7 +53,7 @@ const SplitLayout: React.FC<SplitLayoutProps> = ({ leftTop, leftBottom, right })
             ${isFixed ? 'fixed top-0 left-0 right-0 bg-white z-50' : 'static'}
             lg:static lg:border-none
           `}
-        >
+          >
           {leftBottom}
         </div>
       </div>

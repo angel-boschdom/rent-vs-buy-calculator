@@ -1,5 +1,3 @@
-// file: /src/types/index.ts
-
 export interface SimulationParameters {
     MortgageDurationYears: number;
     MortgageInterestRateYearly: number; // decimal form (e.g., 0.04 = 4%)

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Chart, registerables } from 'chart.js';
-import SplitLayout from './SplitLayout';
-import RadioButtonCustom from './RadioButtonCustom';
-import Slider from './Slider';
-import { useSimulation } from '../hooks/useSimulation';
-import { SimulationParameters, InitialConditions } from '../types';
-import { themeColors } from '../theme/colors'; 
+import SplitLayout from '@/components/SplitLayout';
+import RadioButtonCustom from '@/components//RadioButtonCustom';
+import Slider from '@/components/Slider';
+import { useSimulation } from '@/hooks/useSimulation';
+import { SimulationParameters, InitialConditions } from '@/types';
+import { themeColors } from '@/theme/colors'; 
 
 Chart.register(...registerables);
 

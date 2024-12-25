@@ -1,5 +1,5 @@
 import React from 'react';
-import TooltipIcon from './TooltipIcon';
+import TooltipIcon from '@/components/TooltipIcon';
 
 interface SliderProps {
   id: string;
