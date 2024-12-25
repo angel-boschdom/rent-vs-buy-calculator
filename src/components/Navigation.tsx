@@ -67,16 +67,18 @@ export default function Navigation() {
                           {item.children.map((child) => (
                             <li key={child.label}>
                               <NavigationMenuLink asChild>
-                                <Link
-                                  href={child.href}
-                                  className={`block select-none space-y-1 rounded-md p-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
-                                    location === child.href
-                                      ? "bg-accent text-accent-foreground"
-                                      : "text-foreground"
-                                  }`}
-                                >
-                                  {child.label}
-                                </Link>
+                                {child.href && (
+                                  <Link
+                                    href={child.href}
+                                    className={`block select-none space-y-1 rounded-md p-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
+                                      location === child.href
+                                        ? "bg-accent text-accent-foreground"
+                                        : "text-foreground"
+                                    }`}
+                                  >
+                                    {child.label}
+                                  </Link>
+                                )}
                               </NavigationMenuLink>
                             </li>
                           ))}
@@ -171,12 +173,14 @@ export default function Navigation() {
                                 className="block pl-4"
                                 onClick={() => setIsOpen(false)}
                               >
-                                <Link
-                                  href={child.href}
-                                  className="block py-2 text-foreground hover:text-primary"
-                                >
-                                  {child.label}
-                                </Link>
+                                {child.href && (
+                                  <Link
+                                    href={child.href}
+                                    className="block py-2 text-foreground hover:text-primary"
+                                  >
+                                    {child.label}
+                                  </Link>
+                                )}
                               </div>
                             ))}
                           </motion.div>
