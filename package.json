@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "predeploy": "npm run build && cp CNAME dist/",
+    "predeploy": "npm run build && cp dist/index.html dist/404.html && cp CNAME dist/",
     "deploy": "gh-pages -d dist",
     "lint": "eslint .",
     "preview": "vite preview",
