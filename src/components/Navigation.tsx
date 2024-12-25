@@ -173,7 +173,7 @@ export default function Navigation() {
                               >
                                 <Link
                                   href={child.href}
-                                  className="block py-2 text-muted hover:text-primary"
+                                  className="block py-2 text-foreground hover:text-primary"
                                 >
                                   {child.label}
                                 </Link>
