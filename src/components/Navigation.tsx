@@ -1,7 +1,7 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, ChevronDown, ChevronUp } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -11,29 +11,25 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-
-const housingItems = [
-  { href: "/housing/rent-vs-buy", label: "Should I rent or should I buy?" },
-  { href: "/housing/afford", label: "How much can I afford to buy?" },
-  { href: "/housing/when", label: "When can I afford to buy my first home?" },
-];
-
-const retirementItems = [
-  { href: "/retire/fire", label: "Can I retire early?" },
-  { href: "/retire/salary-sacrifice", label: "How much salary sacrifice should I do?" },
-];
+// Import your NAV_ITEMS from constants
+import { NAV_ITEMS } from "@/lib/constants";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
-  const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [openSubmenus, setOpenSubmenus] = useState<string[]>([]);
   const [location] = useLocation();
 
-  const toggleSection = (section: string) => {
-    setExpandedSections((prev) =>
-      prev.includes(section) ? prev.filter((s) => s !== section) : [...prev, section]
+  // Toggle which submenu is open in mobile mode
+  const toggleSubmenu = (label: string) => {
+    setOpenSubmenus((current) =>
+      current.includes(label)
+        ? current.filter((item) => item !== label)
+        : [...current, label]
     );
   };
+
+  // Check if a particular submenu is open
+  const isSubmenuOpen = (label: string) => openSubmenus.includes(label);
 
   // Prevent scrolling when mobile menu is open
   useEffect(() => {
@@ -47,180 +43,169 @@ export default function Navigation() {
     };
   }, [isOpen]);
 
-  const navItems = [
-    { href: "/", label: "Home" },
-    {
-      label: "Housing and Property",
-      items: housingItems,
-    },
-    {
-      label: "Retirement and Pension",
-      items: retirementItems,
-    },
-  ];
-
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-primary">
-      <div className="container flex h-16 items-center justify-between px-4 relative">
-        <Link href="/">
-          <p className="text-xl font-semibold">WealthMate</p>
-        </Link>
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
+      <div className="container mx-auto px-4">
+        <div className="flex h-16 items-center justify-between">
+          {/* Brand / Logo */}
+          <Link href="/" className="text-2xl font-bold text-primary">
+            WealthMate
+          </Link>
 
-        {/* Mobile menu button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
-        >
-          {isOpen ? <X className="h-8 w-8" /> : <Menu className="h-8 w-8" />}
-        </Button>
-        
-        {/* Desktop menu */}
-        <NavigationMenu className="hidden md:flex">
-          <NavigationMenuList>
-            {navItems.map((item) =>
-              item.items ? (
+          {/* Desktop Menu */}
+          <NavigationMenu className="hidden md:flex">
+            <NavigationMenuList>
+              {NAV_ITEMS.map((item) => (
                 <NavigationMenuItem key={item.label}>
-                  <NavigationMenuTrigger className="h-9 px-4 py-2">
-                    {item.label}
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-48 gap-1 p-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                      {item.items.map((subItem) => (
-                        <li key={subItem.href}>
-                          <Link href={subItem.href}>
-                            <NavigationMenuLink asChild>
-                              <span
-                                className={cn(
-                                  "block select-none rounded-md p-2 text-sm leading-none no-underline outline-none transition-colors cursor-pointer",
-                                  "hover:bg-accent hover:text-accent-foreground",
-                                  location === subItem.href && "bg-accent text-accent-foreground"
-                                )}
-                              >
-                                {subItem.label}
-                              </span>
-                            </NavigationMenuLink>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              ) : (
-                <NavigationMenuItem key={item.href}>
-                  <Link href={item.href!}>
-                    <NavigationMenuLink asChild>
-                      <span
-                        className={cn(
-                          "block select-none rounded-md p-2 text-sm leading-none no-underline outline-none transition-colors cursor-pointer",
-                          "hover:bg-accent hover:text-accent-foreground",
-                          location === item.href && "bg-accent text-accent-foreground"
-                        )}
-                      >
+                  {item.children ? (
+                    <>
+                      <NavigationMenuTrigger className="capitalize text-foreground hover:text-primary">
                         {item.label}
-                      </span>
-                    </NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
-              )
-            )}
-          </NavigationMenuList>
-        </NavigationMenu>
-
-        {/* Mobile menu backdrop */}
-        <div
-          className={cn(
-            "fixed inset-0 bg-black/50 z-[998] md:hidden transition-opacity duration-300 ease-in-out",
-            isOpen ? "opacity-100 visible" : "opacity-0 invisible"
-          )}
-          onClick={() => setIsOpen(false)}
-        />
-
-        {/* Mobile menu panel */}
-        <div
-          className={cn(
-            "fixed inset-y-0 right-0 w-full max-w-xs z-[999] isolate",
-            "flex flex-col",
-            "bg-background text-foreground",
-            "transform transition-all duration-300 ease-in-out",
-            isOpen ? "translate-x-0 opacity-100 visible" : "translate-x-full opacity-0 invisible"
-          )}
-        >
-          <div className="flex h-16 items-center justify-end px-4 border-b border-border">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsOpen(false)}
-            aria-label="Close menu"
-          >
-            <X className="h-8 w-8" />
-          </Button>
-          </div>
-          <nav className="h-[calc(100vh-4rem)] overflow-y-auto">
-            <ul className="px-4 py-6 space-y-6">
-              {navItems.map((item) => (
-                <li key={item.label} className="text-lg">
-                  {item.items ? (
-                    <div className="space-y-3">
-                      <button
-                        onClick={() => toggleSection(item.label)}
-                        className="flex items-center justify-between w-full font-semibold"
-                      >
-                        <span>{item.label}</span>
-                        {expandedSections.includes(item.label) ? (
-                          <ChevronUp className="h-5 w-5" />
-                        ) : (
-                          <ChevronDown className="h-5 w-5" />
-                        )}
-                      </button>
-                      <ul
-                        className={cn(
-                          "pl-4 space-y-3 overflow-hidden transition-all duration-300",
-                          expandedSections.includes(item.label)
-                            ? "max-h-96 opacity-100"
-                            : "max-h-0 opacity-0"
-                        )}
-                      >
-                        {item.items.map((subItem) => (
-                          <li key={subItem.href}>
-                            <Link href={subItem.href}>
-                              <span
-                                className={cn(
-                                  "block py-2 transition-colors cursor-pointer",
-                                  "hover:text-accent",
-                                  location === subItem.href && "text-accent"
-                                )}
-                                onClick={() => setIsOpen(false)}
-                              >
-                                {subItem.label}
-                              </span>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <ul className="grid w-[300px] gap-3 p-4 md:w-[400px] md:grid-cols-1 bg-background">
+                          {item.children.map((child) => (
+                            <li key={child.label}>
+                              <NavigationMenuLink asChild>
+                                <Link
+                                  href={child.href}
+                                  className={`block select-none space-y-1 rounded-md p-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
+                                    location === child.href
+                                      ? "bg-accent text-accent-foreground"
+                                      : "text-foreground"
+                                  }`}
+                                >
+                                  {child.label}
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          ))}
+                        </ul>
+                      </NavigationMenuContent>
+                    </>
                   ) : (
-                    <Link href={item.href!}>
-                      <span
-                        className={cn(
-                          "block py-2 transition-colors cursor-pointer",
-                          "hover:text-accent",
-                          location === item.href && "text-accent"
-                        )}
-                        onClick={() => setIsOpen(false)}
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href={item.href!}
+                        className={`block select-none space-y-1 rounded-md p-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
+                          location === item.href
+                            ? "bg-accent text-accent-foreground"
+                            : "text-foreground"
+                        }`}
                       >
                         {item.label}
-                      </span>
-                    </Link>
+                      </Link>
+                    </NavigationMenuLink>
                   )}
-                </li>
+                </NavigationMenuItem>
               ))}
-            </ul>
-          </nav>
+            </NavigationMenuList>
+          </NavigationMenu>
+
+          {/* CTA on Desktop */}
+          <Button className="hidden md:inline-flex">Become a Pro</Button>
+
+          {/* Mobile Menu Button */}
+          <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
+            <span className="sr-only">Open menu</span>
+            <svg
+              className="h-6 w-6 text-foreground"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              {/* Toggle icon: hamburger vs. X */}
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d={
+                  isOpen
+                    ? "M6 18L18 6M6 6l12 12"
+                    : "M4 6h16M4 12h16M4 18h16"
+                }
+              />
+            </svg>
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden border-t border-border"
+          >
+            <div className="space-y-1 px-4 pb-3 pt-2 bg-background">
+              {NAV_ITEMS.map((item) => (
+                <div key={item.label} className="border-b border-border py-2">
+                  {item.children ? (
+                    <motion.div>
+                      <button
+                        onClick={() => toggleSubmenu(item.label)}
+                        className="flex w-full items-center justify-between py-2 text-foreground hover:text-primary"
+                      >
+                        <span>{item.label}</span>
+                        <ChevronDown
+                          className={`h-4 w-4 transform transition-transform ${
+                            isSubmenuOpen(item.label) ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+                      <AnimatePresence>
+                        {isSubmenuOpen(item.label) && (
+                          <motion.div
+                            initial={{ height: 0 }}
+                            animate={{ height: "auto" }}
+                            exit={{ height: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="overflow-hidden bg-highlight"
+                          >
+                            {item.children.map((child) => (
+                              <div
+                                key={child.label}
+                                className="block pl-4"
+                                onClick={() => setIsOpen(false)}
+                              >
+                                <Link
+                                  href={child.href}
+                                  className="block py-2 text-muted hover:text-primary"
+                                >
+                                  {child.label}
+                                </Link>
+                              </div>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  ) : (
+                    <div onClick={() => setIsOpen(false)}>
+                      <Link
+                        href={item.href!}
+                        className="block py-2 text-foreground hover:text-primary"
+                      >
+                        {item.label}
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {/* CTA on Mobile */}
+              <div className="pt-4">
+                <Link href="/appointments">
+                  <Button className="w-full">Become a Pro</Button>
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

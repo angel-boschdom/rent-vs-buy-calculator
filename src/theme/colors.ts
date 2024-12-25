@@ -22,5 +22,5 @@ export const themeColors = {
   
     // Additional Colors
     muted: '#9CA3AF',                  // Gray for muted text or disabled states
-    highlight: '#F0F4FF',              // Light Blue for highlights or emphasis
+    highlight: '#F7FFFA',              // Very pale eucaliptus green for highlights or emphasis
   };  
